@@ -42,7 +42,7 @@ public class App {
                 System.out.println("Exiting the application. Goodbye!");
                 return;
             default:
-                throw new ValidationException("Invalid option. Please restart the application.");
+                throw new ValidationException("Invalid option. Please choose one of the provided options.");
         }
 
         populateRepositories();
