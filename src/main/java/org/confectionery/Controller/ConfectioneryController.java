@@ -1,8 +1,6 @@
 package org.confectionery.Controller;
 
-import org.confectionery.Domain.Admin;
-import org.confectionery.Domain.Client;
-import org.confectionery.Domain.User;
+import org.confectionery.Domain.*;
 import org.confectionery.Service.ConfectioneryService;
 
 import java.util.List;
@@ -14,7 +12,7 @@ public class ConfectioneryController {
         this.confectioneryService = confectioneryService;
     }
 
-    public Admin createAdmin(String name,String email,String password) {
+    public Admin createAdmin(String name, String email, String password) {
         return confectioneryService.createAdmin(name, email, password);
     }
 
@@ -23,7 +21,7 @@ public class ConfectioneryController {
     }
 
     public User loginUser(String email, String password) {
-        return confectioneryService.loginUser(email,password);
+        return confectioneryService.loginUser(email, password);
     }
 
     public List<User> getUsers() {
@@ -36,5 +34,45 @@ public class ConfectioneryController {
 
     public void updateStatusOff(Integer id) {
         confectioneryService.statusOff(id);
+    }
+
+    public void deleteClient(Integer id) {
+        confectioneryService.deleteClient(id);
+    }
+
+    public Client getClient(Integer id) {
+       return confectioneryService.getClient(id);
+    }
+
+    public List<Product> getProducts() {
+        return confectioneryService.getProducts();
+    }
+
+    public void deleteProduct(Integer id) {
+        confectioneryService.deleteProduct(id);
+    }
+
+    public void updateClient(Integer id, String updatedName, String updatedEmail, String updatedPassword, String updatedAddress) {
+        confectioneryService.updateClient(id, updatedName, updatedEmail, updatedPassword,updatedAddress);
+    }
+
+    public Drink createDrink(String name, double price, double weight, ExpirationDate expirationDate, int points, double alcoholPercentage) {
+        return confectioneryService.createDrink(name,price,weight,expirationDate,points,alcoholPercentage);
+    }
+
+    public Cake createCake(String name, double price, double weight, ExpirationDate expirationDate, int points, int calories) {
+        return confectioneryService.createCake(name,price,weight,expirationDate,points,calories);
+    }
+
+    public Product getProduct(Integer id) {
+        return confectioneryService.getProduct(id);
+    }
+
+    public void updateDrink(Integer id, String name, double price, double weight, int points, double alcoholPercentage) {
+        confectioneryService.updateDrink(id,name,price,weight,points,alcoholPercentage);
+    }
+
+    public void updateCake(Integer id, String name, double price, double weight, int points, int calories) {
+        confectioneryService.updateCake(id,name,price,weight,points,calories);
     }
 }

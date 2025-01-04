@@ -10,7 +10,7 @@ import java.util.List;
 public class Client extends User implements Serializable {
 
     private final List<Order> orders = new ArrayList<>();
-    private final String address;
+    private String address;
 
     /**
      * @param name    represents the client name
@@ -23,6 +23,13 @@ public class Client extends User implements Serializable {
         this.address = address;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     /**
      * @return the orders

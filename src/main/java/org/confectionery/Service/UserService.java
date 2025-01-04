@@ -3,6 +3,7 @@ package org.confectionery.Service;
 import org.confectionery.Domain.Admin;
 import org.confectionery.Domain.Client;
 import org.confectionery.Domain.User;
+import org.confectionery.Exception.EntityNotFoundException;
 import org.confectionery.Exception.InvalidCredentialsException;
 import org.confectionery.Repository.Repository;
 
@@ -15,12 +16,13 @@ public class UserService {
     public UserService(Repository<User> userRepository) {
         this.userRepository = userRepository;
     }
-    public Client registerClient(String name, String email,String password, String address) {
-        try{
+
+    public Client registerClient(String name, String email, String password, String address) {
+        try {
             if (isEmailRegistered(email)) {
                 throw new IllegalArgumentException("A user with this email already exists.");
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -31,11 +33,11 @@ public class UserService {
     }
 
     public Admin registerAdmin(String name, String email, String password) {
-        try{
+        try {
             if (isEmailRegistered(email)) {
                 throw new IllegalArgumentException("A user with this email already exists.");
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -46,17 +48,16 @@ public class UserService {
     }
 
     public User login(String email, String password) {
-        try{
+        try {
             Optional<User> loggedUser = userRepository.getAll().stream()
                     .filter(user -> user instanceof Admin || user instanceof Client)
                     .filter(user -> user instanceof Admin admin && admin.getEmail().equals(email) && admin.getPassword().equals(password)
                             || user instanceof Client client && client.getEmail().equals(email) && client.getPassword().equals(password))
                     .findFirst();
-            if(loggedUser.isPresent()){
+            if (loggedUser.isPresent()) {
                 return loggedUser.get();
-            }
-            else throw new InvalidCredentialsException("Incorrect credentials provided or not found.");
-        }catch (InvalidCredentialsException e){
+            } else throw new InvalidCredentialsException("Incorrect credentials provided or not found.");
+        } catch (InvalidCredentialsException e) {
             System.out.println(e.getMessage());
         }
         return null;
@@ -70,10 +71,6 @@ public class UserService {
         userRepository.delete(id);
     }
 
-    public void resetClientPassword(Client client, String newPassword) {
-        client.setPassword(newPassword);
-        userRepository.update(client);
-    }
     private boolean isEmailRegistered(String email) {
         return userRepository.getAll()
                 .stream()
@@ -81,14 +78,57 @@ public class UserService {
     }
 
     public void setStatusOn(Integer id) {
-        Admin admin = (Admin) userRepository.get(id);
-        admin.setStatus("Active");
-        userRepository.update(admin);
+        try {
+            Admin admin = (Admin) userRepository.get(id);
+            if (admin == null) throw new EntityNotFoundException("Entity not found.");
+            else {
+                admin.setStatus("Active");
+                userRepository.update(admin);
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 
     public void setStatusOff(Integer id) {
-        Admin admin = (Admin) userRepository.get(id);
-        admin.setStatus("Inactive");
-        userRepository.update(admin);
+        try {
+            Admin admin = (Admin) userRepository.get(id);
+            if (admin == null) throw new EntityNotFoundException("Entity not found.");
+            else {
+                admin.setStatus("Inactive");
+                userRepository.update(admin);
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Client getClient(Integer id){
+        try{
+            Client client = (Client) userRepository.get(id);
+            if (client == null) throw new EntityNotFoundException("Entity not found.");
+            else return client;
+        }catch (EntityNotFoundException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void updateClient(Integer id, String updatedName, String updatedEmail, String updatedPassword, String updatedAddress) {
+        try{
+            if(userRepository.get(id) == null) throw new EntityNotFoundException("Entity not found.");
+            else {
+                Client client = (Client) userRepository.get(id);
+                client.setName(updatedName);
+                client.setEmail(updatedEmail);
+                client.setPassword(updatedPassword);
+                client.setAddress(updatedAddress);
+                userRepository.update(client);
+            }
+        }catch (EntityNotFoundException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

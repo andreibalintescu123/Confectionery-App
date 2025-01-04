@@ -1,11 +1,11 @@
 package org.confectionery.UI;
 
 import org.confectionery.Controller.ConfectioneryController;
-import org.confectionery.Domain.Admin;
-import org.confectionery.Domain.Client;
-import org.confectionery.Domain.User;
+import org.confectionery.Domain.*;
 import org.confectionery.Exception.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -93,7 +93,7 @@ public class ConfectioneryUI {
                         4. Generate Invoice
                         5. View Profile
                         6. View Drinks With Alcohol
-                        7. View Products available until December 2024
+                        7. View Products available until January 2025
                         0. Logout
                         Please select an option:
                         """);
@@ -143,7 +143,7 @@ public class ConfectioneryUI {
                 System.out.print("""
                         Admin Menu:
                         1. Balance Information
-                        2. Client Management
+                        2. User Management
                         3. Product Management
                         4. View Profile
                         5. Change Password
@@ -163,7 +163,7 @@ public class ConfectioneryUI {
                         balanceInformationMenu();
                         break;
                     case "2":
-                        clientManagementMenu();
+                        userManagementMenu();
                         break;
                     case "3":
                         productManagementMenu();
@@ -192,20 +192,24 @@ public class ConfectioneryUI {
         System.out.println(loggedUser.toString());
     }
 
-    private void clientManagementMenu() {
+    private void userManagementMenu() {
         boolean clientManagementRunning = true;
         while (clientManagementRunning) {
             try {
                 System.out.print("""
                         Client Management Menu:
                         1. View All Users
-                        2. View Client with the most points
-                        3. View Clients with their Orders
-                        4. Delete Client
+                        2. View All Clients
+                        3. Get Client by id
+                        4. Update Client
+                        5. Delete Client
+                        6. View Client with the most points
+                        7. View Clients with their Orders
+                        
                         0. Exit Menu
                         """);
                 String option = scanner.nextLine();
-                if (!isValidOption(option, "1", "2", "3", "4", "0")) {
+                if (!isValidOption(option, "1", "2", "3", "4", "5", "6", "7", "0")) {
                     throw new ValidationException("Invalid option. Please select a valid option.");
                 }
                 switch (option) {
@@ -213,10 +217,20 @@ public class ConfectioneryUI {
                         viewUsers();
                         break;
                     case "2":
+                        viewClients();
                         break;
                     case "3":
+                        getClient();
                         break;
                     case "4":
+                        updateClient();
+                        break;
+                    case "5":
+                        deleteClient();
+                        break;
+                    case "6":
+                        break;
+                    case "7":
                         break;
                     case "0":
                         clientManagementRunning = false;
@@ -229,6 +243,66 @@ public class ConfectioneryUI {
         }
     }
 
+    private void deleteClient() {
+        System.out.println("Enter the id of the client you would like to delete:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        controller.deleteClient(id);
+    }
+/// NU UITA CA TREBUIE SA VALIDEZI EMAIL-UL CA SA NU IL INLOCUIESTI CU UNUL DEJA EXISTENT
+    private void updateClient() {
+        System.out.println("Enter the id of the client you would like to update:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter the updated name or press enter to avoid changes:");
+        String updatedName = scanner.nextLine();
+        System.out.println("Enter the new email or press enter to avoid changes:");
+        String updatedEmail = scanner.nextLine();
+        System.out.println("Enter the new password or press enter to avoid changes:");
+        String updatedPassword = scanner.nextLine();
+        System.out.println("Enter the new address or press enter to avoid changes:");
+        String updatedAddress = scanner.nextLine();
+        try {
+            controller.updateClient(id, updatedName, updatedEmail, updatedPassword, updatedAddress);
+            System.out.println("Client with id " + id + " updated successfully.");
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    private void getClient() {
+        System.out.println("Enter the id of the client you would like to check:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        Client client = controller.getClient(id);
+        System.out.println(client.toString());
+    }
+
+    private void viewUsers() {
+        System.out.println("These are the users registered in the system:");
+        for (User user : controller.getUsers()) {
+            System.out.println(user.toString());
+        }
+    }
+
+    private void viewClients() {
+        List<Client> clients = new ArrayList<>();
+        List<User> users = controller.getUsers();
+        for (User user : users) {
+            if (user instanceof Client) {
+                clients.add((Client) user);
+            }
+        }
+        if (!clients.isEmpty()) {
+            System.out.println("These are the clients registered in the system:");
+            for (User user : controller.getUsers()) {
+                if (user instanceof Client) {
+                    System.out.println(user);
+                }
+            }
+        } else {
+            System.out.println("There are no clients registered in the system.");
+        }
+    }
+
     private void productManagementMenu() {
         boolean productManagementRunning = true;
         while (productManagementRunning) {
@@ -238,18 +312,29 @@ public class ConfectioneryUI {
                         1. Create Product
                         2. Update Product
                         3. Delete Product
+                        4. View Products
+                        5. Get Product by id
                         0. Exit Menu
                         """);
                 String option = scanner.nextLine();
-                if (!isValidOption(option, "1", "2", "3", "0")) {
+                if (!isValidOption(option, "1", "2", "3", "4", "5", "0")) {
                     throw new ValidationException("Invalid option. Please select a valid option.");
                 }
                 switch (option) {
                     case "1":
+                        createProduct();
                         break;
                     case "2":
+                        updateProduct();
                         break;
                     case "3":
+                        deleteProduct();
+                        break;
+                    case "4":
+                        viewProducts();
+                        break;
+                    case "5":
+                        getProduct();
                         break;
                     case "0":
                         productManagementRunning = false;
@@ -260,6 +345,149 @@ public class ConfectioneryUI {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private void createProduct() {
+        System.out.println("What product would you like to create: Drink or Cake.");
+        String type = scanner.nextLine();
+        if (type.equals("Drink")) {
+            System.out.print("Enter drink name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter drink price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter drink weight: ");
+            double weight = scanner.nextDouble();
+            System.out.print("Enter drink points: ");
+            int points = scanner.nextInt();
+            System.out.print("Enter drink alcohol percentage: ");
+            double alcoholPercentage = scanner.nextDouble();
+            // Calculate expiration date (2 weeks from today)
+            LocalDate today = LocalDate.now();
+            LocalDate expirationDateLocal = today.plusWeeks(2);
+
+            // Map LocalDate components to ExpirationDate
+            int year = expirationDateLocal.getYear();
+            Month month = Month.values()[expirationDateLocal.getMonthValue() - 1];
+            Day day = Day.values()[expirationDateLocal.getDayOfMonth() - 1];
+
+            ExpirationDate expirationDate = new ExpirationDate(year, month, day);
+            scanner.nextLine();
+            try{
+                Drink drink = controller.createDrink(name, price, weight, expirationDate, points, alcoholPercentage);
+                if(drink != null) {
+                    System.out.println("Drink with id" + drink.getID() + " created successfully.");
+                }
+                else throw new FailedEntityCreation("Failed to create drink.");
+            }catch (FailedEntityCreation e){
+                System.out.println(e.getMessage());
+            }
+
+
+        } else if (type.equals("Cake")) {
+            System.out.print("Enter cake name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter cake price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter cake weight: ");
+            double weight = scanner.nextDouble();
+            System.out.print("Enter cake points: ");
+            int points = scanner.nextInt();
+            System.out.print("Enter cake calories: ");
+            int calories = scanner.nextInt();
+            // Calculate expiration date (1 week from today)
+            LocalDate today = LocalDate.now();
+            LocalDate expirationDateLocal = today.plusWeeks(1);
+
+            // Map LocalDate components to ExpirationDate
+            int year = expirationDateLocal.getYear();
+            Month month = Month.values()[expirationDateLocal.getMonthValue() - 1];
+            Day day = Day.values()[expirationDateLocal.getDayOfMonth() - 1];
+            ExpirationDate expirationDate = new ExpirationDate(year, month, day);
+            scanner.nextLine();
+            try{
+                Cake cake = controller.createCake(name, price, weight, expirationDate, points, calories);
+                if(cake != null) {
+                    System.out.println("Cake with id" + cake.getID() + " created successfully.");
+                }
+                else throw new FailedEntityCreation("Failed to create cake.");
+            }catch (FailedEntityCreation e){
+                System.out.println(e.getMessage());
+            }
+
+
+        } else {
+            System.out.println("Invalid option. Please choose one of the provided options.");
+        }
+    }
+/// GRIJA LA UPDATE SA VERIFICI DACA TORTUL ARE NUME UNIC
+    private void updateProduct() {
+        System.out.println("Enter the id of the product you would like to update:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        Product product = controller.getProduct(id);
+        if(product instanceof Drink) {
+            System.out.print("Enter drink name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter drink price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter drink weight: ");
+            double weight = scanner.nextDouble();
+            System.out.print("Enter drink points: ");
+            int points = scanner.nextInt();
+            System.out.print("Enter drink alcohol percentage: ");
+            double alcoholPercentage = scanner.nextDouble();
+            try {
+                controller.updateDrink(id, name, price, weight, points, alcoholPercentage);
+                System.out.println("Drink with id " + id + " updated successfully.");
+            } catch (EntityNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        else if (product instanceof Cake) {
+            System.out.print("Enter cake name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter cake price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter cake weight: ");
+            double weight = scanner.nextDouble();
+            System.out.print("Enter cake points: ");
+            int points = scanner.nextInt();
+            System.out.print("Enter cake calories: ");
+            int calories = scanner.nextInt();
+            try{
+                controller.updateCake(id,name, price, weight,points,calories);
+                System.out.println("Cake with id " + id + " updated successfully.");
+            }catch (EntityNotFoundException e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void deleteProduct() {
+        System.out.println("Enter the id of the product you would like to delete:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        if(controller.getProduct(id) != null) {
+            controller.deleteProduct(id);
+            System.out.println("Product with id " + id + " deleted successfully.");
+        }
+        else {
+            System.out.println("Failed to delete product.");
+        }
+
+
+    }
+
+    private void viewProducts() {
+        List<Product> products = controller.getProducts();
+        for (Product product : products) {
+            System.out.println(product.toString());
+        }
+    }
+
+    private void getProduct(){
+        System.out.println("Enter the id of the product you would like to check:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        Product product = controller.getProduct(id);
+        System.out.println(product.toString());
     }
 
     private void balanceInformationMenu() {
@@ -321,8 +549,8 @@ public class ConfectioneryUI {
                 Admin admin = controller.createAdmin(name, email, password);
                 if (admin != null)
                     System.out.println("Admin with id " + admin.getID() + " created successfully!");
-                else throw new FailedAccountCreationException("Account creation failed.");
-            } catch (FailedAccountCreationException e) {
+                else throw new FailedEntityCreation("Account creation failed.");
+            } catch (FailedEntityCreation e) {
                 System.out.println(e.getMessage());
             }
         } else if (role.equals("Client")) {
@@ -351,8 +579,8 @@ public class ConfectioneryUI {
                 Client client = controller.createClient(name, email, password, address);
                 if (client != null)
                     System.out.println("Client with id " + client.getID() + " created successfully!");
-                else throw new FailedAccountCreationException("Account creation failed.");
-            } catch (FailedAccountCreationException e) {
+                else throw new FailedEntityCreation("Account creation failed.");
+            } catch (FailedEntityCreation e) {
                 System.out.println(e.getMessage());
             }
         } else System.out.println("Choose one of the provided roles!");
@@ -389,9 +617,4 @@ public class ConfectioneryUI {
         }
     }
 
-    private void viewUsers() {
-        for (User user : controller.getUsers()) {
-            System.out.println(user.toString());
-        }
-    }
 }
