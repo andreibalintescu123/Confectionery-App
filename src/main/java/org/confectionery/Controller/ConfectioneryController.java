@@ -75,4 +75,20 @@ public class ConfectioneryController {
     public void updateCake(Integer id, String name, double price, double weight, int points, int calories) {
         confectioneryService.updateCake(id,name,price,weight,points,calories);
     }
+
+    public List<Drink> viewAlcoholicDrinks() {
+        return confectioneryService.getAlcoholicDrinks();
+    }
+
+    public List<Product> menuSortedByPrice() {
+        return confectioneryService.productsSortedByPrice();
+    }
+
+    public List<Product> menuSortedByPoints() {
+        return confectioneryService.productsSortedByPoints();
+    }
+
+    public List<Product> getAvailableProducts(ExpirationDate expirationDate) {
+        return confectioneryService.productsBeforeDate(expirationDate);
+    }
 }

@@ -5,10 +5,7 @@ import org.confectionery.Domain.*;
 import org.confectionery.Exception.ValidationException;
 import org.confectionery.Repository.InMemoryRepository;
 import org.confectionery.Repository.Repository;
-import org.confectionery.Service.CakeService;
-import org.confectionery.Service.ConfectioneryService;
-import org.confectionery.Service.DrinkService;
-import org.confectionery.Service.UserService;
+import org.confectionery.Service.*;
 import org.confectionery.UI.ConfectioneryUI;
 
 import java.util.Scanner;
@@ -146,7 +143,8 @@ public class App {
         UserService userService = new UserService(userRepository);
         CakeService cakeService = new CakeService(cakeRepository);
         DrinkService drinkService = new DrinkService(drinkRepository);
-        service = new ConfectioneryService(userService, drinkService, cakeService);
+        OrderService orderService = new OrderService(orderRepository);
+        service = new ConfectioneryService(userService, drinkService, cakeService, orderService);
     }
 
     private void initializeController() {

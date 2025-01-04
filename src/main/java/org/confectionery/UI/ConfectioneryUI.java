@@ -93,7 +93,7 @@ public class ConfectioneryUI {
                         4. Generate Invoice
                         5. View Profile
                         6. View Drinks With Alcohol
-                        7. View Products available until January 2025
+                        7. View Products available until a given date
                         0. Logout
                         Please select an option:
                         """);
@@ -107,19 +107,25 @@ public class ConfectioneryUI {
 
                 switch (option) {
                     case "1":
+                        menuSortedByPoints();
                         break;
                     case "2":
+                        menuSortedByPrice();
                         break;
                     case "3":
+                        placeOrder();
                         break;
                     case "4":
+                        generateInvoice();
                         break;
                     case "5":
                         viewProfile();
                         break;
                     case "6":
+                        viewAlcoholicDrinks();
                         break;
                     case "7":
+                        viewAvailableProducts();
                         break;
                     case "0":
                         loggedUser = null;
@@ -132,6 +138,44 @@ public class ConfectioneryUI {
             } catch (ValidationException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+        }
+    }
+
+    private void generateInvoice() {
+    }
+
+    private void placeOrder() {
+
+    }
+
+    private void viewAvailableProducts() {
+        System.out.println("Enter a valid date in the form Year-Month( January, February...)-Day(Tenth,Eleventh...)");
+        String expirationDate = scanner.nextLine();
+        ExpirationDate date =ExpirationDate.parse(expirationDate);
+        List<Product> products = controller.getAvailableProducts(date);
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+
+    private void viewAlcoholicDrinks() {
+        List<Drink> drinks = controller.viewAlcoholicDrinks();
+        for (Drink drink : drinks) {
+            System.out.println(drink);
+        }
+    }
+
+    private void menuSortedByPrice() {
+        List<Product> products = controller.menuSortedByPrice();
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+
+    private void menuSortedByPoints() {
+        List<Product> products = controller.menuSortedByPoints();
+        for (Product product : products) {
+            System.out.println(product);
         }
     }
 
