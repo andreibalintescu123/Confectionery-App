@@ -7,17 +7,21 @@ import java.io.*;
  */
 public abstract class User implements HasID, Serializable {
 
+
+    protected Integer userID;
     protected String name;
-    protected String address;
+    protected String email;
+    protected String password;
 
     /**
      *
      * @param name represents the username
-     * @param address represents the user adress
      */
-    public User(String name, String address) {
+    public User(String name, String email, String password) {
         this.name = name;
-        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.userID = IDGenerator.getInstance().generateID();
     }
 
 
@@ -30,16 +34,33 @@ public abstract class User implements HasID, Serializable {
         return name;
     }
 
-    /**
-     * Gets the address of the user.
-     *
-     * @return the user's address.
-     */
-    public String getAddress() {
-        return address;
+    public String getEmail() {
+        return email;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the unique identifier of the User.
+     * @return the id of the user.
+     */
+    @Override
+    public Integer getID(){
+        return userID;
     }
 
     public abstract String toString();
