@@ -9,27 +9,20 @@ import java.util.List;
  */
 public class Client extends User implements Serializable {
 
-    private Integer ClientID;
     private final List<Order> orders = new ArrayList<>();
+    private final String address;
 
     /**
      * @param name    represents the client name
      * @param address represents the client adress
-     * @param Id      represents the client id
+     * @param password represents the client password
+     * @param email represents the client email
      */
-    public Client(String name, String address, Integer Id) {
-        super(name, address);
-        this.ClientID = Id;
+    public Client(String password, String email,String name, String address ) {
+        super(name, email, password);
+        this.address = address;
     }
 
-    /**
-     * @return the client id
-     **/
-
-    @Override
-    public Integer getID() {
-        return this.ClientID;
-    }
 
     /**
      * @return the orders
@@ -76,15 +69,7 @@ public class Client extends User implements Serializable {
      */
     @Override
     public String toString() {
-        return "Client: " + "id " + ClientID + "," + "name " + name + "," + "address " + address;
-    }
-
-    /**
-     * @return the username
-     */
-
-    public Object getUsername() {
-        return this.name;
+        return "Client: " + "id " + this.getID() + "," + "name " + name + "," + "address " + address;
     }
 
     /**

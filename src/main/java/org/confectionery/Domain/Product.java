@@ -6,28 +6,27 @@ import java.io.*;
  */
 public abstract class Product implements HasID, Serializable {
 
-    private int idProduct;
+    private final int productID;
     private String name;
-    private double price;
-    private double weight;
-    private ExpirationDate expirationDate;
+    private final double price;
+    private final double weight;
+    private final ExpirationDate expirationDate;
     private int points;
 
     /**
-     * @param idProduct      the product id
      * @param name           the product name
      * @param price          the product price
      * @param weight         the product weight
      * @param expirationDate the product expiration date
      * @param points         the product points
      */
-    public Product(int idProduct, String name, double price, double weight, ExpirationDate expirationDate, int points) {
-        this.idProduct = idProduct;
+    public Product( String name, double price, double weight, ExpirationDate expirationDate, int points) {
         this.name = name;
         this.price = price;
         this.weight = weight;
         this.expirationDate = expirationDate;
         this.points = points;
+        this.productID = IDGenerator.getInstance().generateID();
     }
 
 
@@ -65,8 +64,8 @@ public abstract class Product implements HasID, Serializable {
     /**
      * @return the product id.
      */
-    public int getIdProduct() {
-        return idProduct;
+    public int getProductID() {
+        return productID;
     }
 
     /**
@@ -102,7 +101,7 @@ public abstract class Product implements HasID, Serializable {
      */
     @Override
     public Integer getID() {
-        return idProduct;
+        return productID;
     }
 
     /**
@@ -128,7 +127,7 @@ public abstract class Product implements HasID, Serializable {
      */
     public String toString() {
         return "Product{" +
-                "idProduct=" + idProduct +
+                "idProduct=" + productID +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", weight=" + weight +

@@ -17,12 +17,11 @@ public class Order implements HasID, Serializable {
 
     /**
      * @param products A list of products included in the order.
-     * @param orderID  The unique identifier for this order
      * @param date     The date when the order was placed.
      */
-    public Order(List<Product> products, Integer orderID, LocalDate date) {
+    public Order(List<Product> products,LocalDate date) {
         this.products = products;
-        this.orderID = orderID;
+        this.orderID = IDGenerator.getInstance().generateID();
         this.date = date;
         this.clientID = -1; // Default value (e.g., unassigned client)
     }
@@ -110,12 +109,10 @@ public class Order implements HasID, Serializable {
         return stringBuilder.toString();
     }
 
-    // New getter for clientID
     public int getClientID() {
         return clientID;
     }
 
-    // New setter for clientID
     public void setClientID(int clientID) {
         this.clientID = clientID;
     }

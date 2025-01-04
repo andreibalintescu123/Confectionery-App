@@ -8,52 +8,25 @@ import java.io.Serializable;
  */
 public class Admin extends User implements Serializable {
 
-    private String password;
-    private String email;
-    private Integer id;
+    private String status;
 
     /**
      * @param password for the admin
      * @param email    for the admin
-     * @param id       for the admin
      * @param name     for the admin
-     * @param address  for the admin
      */
-    public Admin(String password, String email, Integer id, String name, String address) {
-        super(name, address);
-        this.password = password;
-        this.email = email;
-        this.id = id;
+    public Admin(String password, String email, String name) {
+        super(name,email, password);
+        this.status = "Inactive";
 
     }
 
-    /**
-     * Gets the unique identifier of the admin.
-     *
-     * @return the admin id
-     */
-
-    @Override
-    public Integer getID() {
-        return this.id;
+    public String getStatus() {
+        return status;
     }
 
-    /**
-     * @return the admin email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * @return the admin password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
@@ -61,6 +34,6 @@ public class Admin extends User implements Serializable {
      */
     @Override
     public String toString() {
-        return "Admin:" + "id" + " " + id + ", " + "user" + " " + name + ", "+ "email" + " " + email + ".";
+        return "Admin:" + "id" + " " + this.getID() + ", " + "username" + " " + name + ", "+ "email" + " " + email + ", " + "status" + " " + status + ".";
     }
 }
