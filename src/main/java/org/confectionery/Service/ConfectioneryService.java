@@ -1,21 +1,37 @@
 package org.confectionery.Service;
 
-import org.confectionery.Domain.Cake;
-import org.confectionery.Domain.Drink;
-import org.confectionery.Domain.Order;
-import org.confectionery.Domain.User;
+import org.confectionery.Domain.*;
 import org.confectionery.Repository.Repository;
 
-public class ConfectioneryService {
-    private final Repository<Cake> cakes;
-    private final Repository<Drink> drinks;
-    private final Repository<Order> orders;
-    private final Repository<User> users;
+import java.util.List;
 
-    public ConfectioneryService(Repository<Cake> cakes, Repository<Drink> drinks, Repository<Order> orders, Repository<User> users) {
-        this.cakes = cakes;
-        this.drinks = drinks;
-        this.orders = orders;
-        this.users = users;
+public class ConfectioneryService {
+    private final UserService userService;
+
+    public ConfectioneryService(UserService userService) {
+        this.userService = userService;
+    }
+    public Admin createAdmin(String name, String email, String password) {
+        return userService.registerAdmin(name,email,password);
+    }
+
+    public Client createClient(String name, String email, String password, String address) {
+        return userService.registerClient(name,email,password,address);
+    }
+
+    public User loginUser(String email, String password) {
+        return userService.login(email,password);
+    }
+
+    public List<User> getUsers() {
+        return userService.getAllUsers();
+    }
+
+    public void statusOn(Integer id) {
+        userService.setStatusOn(id);
+    }
+
+    public void statusOff(Integer id) {
+        userService.setStatusOff(id);
     }
 }

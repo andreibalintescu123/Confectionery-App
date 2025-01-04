@@ -18,7 +18,7 @@ public class Client extends User implements Serializable {
      * @param password represents the client password
      * @param email represents the client email
      */
-    public Client(String password, String email,String name, String address ) {
+    public Client(String name, String email,String password, String address ) {
         super(name, email, password);
         this.address = address;
     }
