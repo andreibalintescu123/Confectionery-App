@@ -6,10 +6,11 @@ import java.io.*;
  */
 public abstract class Product implements HasID, Serializable {
 
+
     private final int productID;
     private String name;
-    private final double price;
-    private final double weight;
+    private double price;
+    private double weight;
     private final ExpirationDate expirationDate;
     private int points;
 
@@ -27,45 +28,6 @@ public abstract class Product implements HasID, Serializable {
         this.expirationDate = expirationDate;
         this.points = points;
         this.productID = IDGenerator.getInstance().generateID();
-    }
-
-
-    /**
-     * Prints the expiration date from the product.
-     */
-    public void viewExpirationDate() {
-        System.out.print("Expiration Date: ");
-        System.out.print(expirationDate.getDay() + ".");
-        System.out.print(expirationDate.getMonth() + ".");
-        System.out.println(expirationDate.getYear() + ".");
-    }
-
-    /**
-     * Prints the price of the product.
-     */
-    public void printPrice() {
-        System.out.println("Price: " + price);
-    }
-
-    /**
-     * Prints the weight of the product.
-     */
-    public void printWeight() {
-        System.out.println("Weight: " + weight);
-    }
-
-    /**
-     * Prints the name of the product.
-     */
-    public void printName() {
-        System.out.println("Name: " + name);
-    }
-
-    /**
-     * @return the product id.
-     */
-    public int getProductID() {
-        return productID;
     }
 
     /**
@@ -119,8 +81,17 @@ public abstract class Product implements HasID, Serializable {
     public void setPoints(int points) {
         this.points = points;
     }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
     /**
      * @return a string that includes the Product id, name, price, weight, expirationDate, and points.

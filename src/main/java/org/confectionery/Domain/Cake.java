@@ -8,12 +8,15 @@ import java.io.Serializable;
  */
 public class Cake extends Product implements Serializable {
 
-    private final int calories;
+    private int calories;
     public Cake(String name, double price, double weight, ExpirationDate expirationDate,int points, int calories) {
         super(name, price, weight, expirationDate,points);
         this.calories=calories;
     }
 
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
 
     /**
      * gets the calories from the Cake

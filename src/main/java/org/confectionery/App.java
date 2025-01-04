@@ -5,7 +5,9 @@ import org.confectionery.Domain.*;
 import org.confectionery.Exception.ValidationException;
 import org.confectionery.Repository.InMemoryRepository;
 import org.confectionery.Repository.Repository;
+import org.confectionery.Service.CakeService;
 import org.confectionery.Service.ConfectioneryService;
+import org.confectionery.Service.DrinkService;
 import org.confectionery.Service.UserService;
 import org.confectionery.UI.ConfectioneryUI;
 
@@ -17,7 +19,6 @@ public class App {
     private Repository<Drink> drinkRepository;
     private Repository<User> userRepository;
     private Repository<Order> orderRepository;
-    private UserService userService;
     private ConfectioneryService service;
     private ConfectioneryController controller;
     private ConfectioneryUI ui;
@@ -84,10 +85,10 @@ public class App {
 
 //    private void initializeFileStorage() {
 //        System.out.println("Initializing file storage...");
-//        cakeRepository = new FileRepository<>("cakes.csv", Cake.class);
-//        drinkRepository = new FileRepository<>("drinks.csv", Drink.class);
-//        userRepository = new FileRepository<>("users.csv", User.class);
-//        orderRepository = new FileRepository<>("orders.csv", Order.class);
+//        cakeRepository = new FileRepository<>("cakes.csv");
+//        drinkRepository = new FileRepository<>("drinks.csv");
+//        userRepository = new FileRepository<>("users.csv");
+//        orderRepository = new FileRepository<>("orders.csv");
 //    }
 //
 //    private void initializeDatabaseStorage() {
@@ -142,8 +143,10 @@ public class App {
 
     private void initializeService() {
         System.out.println("Initializing service layer...");
-        userService = new UserService(userRepository);
-        service = new ConfectioneryService(userService);
+        UserService userService = new UserService(userRepository);
+        CakeService cakeService = new CakeService(cakeRepository);
+        DrinkService drinkService = new DrinkService(drinkRepository);
+        service = new ConfectioneryService(userService, drinkService, cakeService);
     }
 
     private void initializeController() {
