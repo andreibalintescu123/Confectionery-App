@@ -6,6 +6,7 @@ import org.confectionery.Exception.ValidationException;
 import org.confectionery.Repository.InMemoryRepository;
 import org.confectionery.Repository.Repository;
 import org.confectionery.Service.ConfectioneryService;
+import org.confectionery.Service.UserService;
 import org.confectionery.UI.ConfectioneryUI;
 
 import java.util.Scanner;
@@ -16,6 +17,7 @@ public class App {
     private Repository<Drink> drinkRepository;
     private Repository<User> userRepository;
     private Repository<Order> orderRepository;
+    private UserService userService;
     private ConfectioneryService service;
     private ConfectioneryController controller;
     private ConfectioneryUI ui;
@@ -132,15 +134,16 @@ public class App {
         cakeRepository.create(new Cake("Pineapple Upside Down Cake", 140, 70, expirationDate5, 95, 650));
         cakeRepository.create(new Cake("Strawberry Shortcake", 160, 80, expirationDate4, 90, 750));
 
-        userRepository.create(new Client("andrei", "andrei@gmail.com", "Andrei", "Bujoreni"));
-        userRepository.create(new Client("ioana", "ioana@gmail.com", "Ioana", "Bujoreni"));
-        userRepository.create(new Client("Maria", "maria@gmail.com", "Maria", "Bujoreni"));
-        userRepository.create(new Admin("admin", "admin@gmail.com", "Bali"));
+        userRepository.create(new Client("Andrei", "andrei@gmail.com", "andrei", "Bujoreni"));
+        userRepository.create(new Client("Ioana", "ioana@gmail.com", "ioana", "Bujoreni"));
+        userRepository.create(new Client("Maria", "maria@gmail.com", "maria", "Bujoreni"));
+        userRepository.create(new Admin("Bali", "admin@gmail.com", "admin"));
     }
 
     private void initializeService() {
         System.out.println("Initializing service layer...");
-        service = new ConfectioneryService(cakeRepository, drinkRepository, orderRepository, userRepository);
+        userService = new UserService(userRepository);
+        service = new ConfectioneryService(userService);
     }
 
     private void initializeController() {

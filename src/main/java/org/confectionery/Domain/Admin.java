@@ -15,7 +15,7 @@ public class Admin extends User implements Serializable {
      * @param email    for the admin
      * @param name     for the admin
      */
-    public Admin(String password, String email, String name) {
+    public Admin(String name, String email, String password) {
         super(name,email, password);
         this.status = "Inactive";
 
