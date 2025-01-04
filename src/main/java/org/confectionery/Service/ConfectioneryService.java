@@ -12,11 +12,13 @@ public class ConfectioneryService {
     private final UserService userService;
     private final DrinkService drinkService;
     private final CakeService cakeService;
+    private final OrderService orderService;
 
-    public ConfectioneryService(UserService userService, DrinkService drinkService, CakeService cakeService) {
+    public ConfectioneryService(UserService userService, DrinkService drinkService, CakeService cakeService, OrderService orderService) {
         this.userService = userService;
         this.drinkService = drinkService;
         this.cakeService = cakeService;
+        this.orderService = orderService;
     }
 
     public Admin createAdmin(String name, String email, String password) {
@@ -158,5 +160,63 @@ public class ConfectioneryService {
         }catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public List<Drink> getAlcoholicDrinks() {
+        List<Drink> drinks = drinkService.getAllDrinks();
+        List<Drink> alcoholicDrinks = new ArrayList<>();
+        for(Drink drink : drinks){
+            if(drink.getAlcoholPercentage() > 0)
+                alcoholicDrinks.add(drink);
+        }
+        return alcoholicDrinks;
+    }
+
+    public List<Product> productsSortedByPrice() {
+        // Retrieve all drinks and cakes
+        List<Drink> drinks = drinkService.getAllDrinks();
+        List<Cake> cakes = cakeService.getAllCakes();
+
+        // Combine drinks and cakes into a single list of products
+        List<Product> products = new ArrayList<>();
+        products.addAll(drinks);
+        products.addAll(cakes);
+
+        // Sort the combined list by the ID of each product
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getPrice).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> productsSortedByPoints() {
+        // Retrieve all drinks and cakes
+        List<Drink> drinks = drinkService.getAllDrinks();
+        List<Cake> cakes = cakeService.getAllCakes();
+
+        // Combine drinks and cakes into a single list of products
+        List<Product> products = new ArrayList<>();
+        products.addAll(drinks);
+        products.addAll(cakes);
+
+        // Sort the combined list by the ID of each product
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getPoints).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> productsBeforeDate(ExpirationDate date) {
+        // Retrieve all drinks and cakes
+        List<Drink> drinks = drinkService.getAllDrinks();
+        List<Cake> cakes = cakeService.getAllCakes();
+
+        // Combine drinks and cakes into a single list of products
+        List<Product> products = new ArrayList<>();
+        products.addAll(drinks);
+        products.addAll(cakes);
+
+        // Filter the combined list for products with expiration dates after the given date
+        return products.stream()
+                .filter(product -> product.getExpirationDate().compareTo(date) > 0)
+                .collect(Collectors.toList());
     }
 }

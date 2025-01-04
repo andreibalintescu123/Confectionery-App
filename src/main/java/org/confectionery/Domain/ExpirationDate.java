@@ -1,19 +1,19 @@
 package org.confectionery.Domain;
+
 import java.io.Serializable;
 
 /**
  * Represents an expiration date, which includes a year, month, and day.
  */
-public class ExpirationDate implements Serializable {
+public class ExpirationDate implements Serializable, Comparable<ExpirationDate> {
     private final int year;
     private final Month month;
     private final Day day;
 
     /**
-     *
-     * @param year the year of expiration date
+     * @param year  the year of expiration date
      * @param month the month of expiration date
-     * @param day the day of expiration date
+     * @param day   the day of expiration date
      */
     public ExpirationDate(int year, Month month, Day day) {
         this.year = year;
@@ -28,6 +28,7 @@ public class ExpirationDate implements Serializable {
     public int getYear() {
         return year;
     }
+
     /**
      * @return the month of the expiration date
      */
@@ -35,6 +36,7 @@ public class ExpirationDate implements Serializable {
     public Month getMonth() {
         return month;
     }
+
     /**
      * @return the day of the expiration date
      */
@@ -43,13 +45,13 @@ public class ExpirationDate implements Serializable {
     }
 
     /**
-     *
      * @return a toString Method with the ExpirationDate - year,month and day
      */
     @Override
     public String toString() {
         return year + "-" + month.name() + "-" + day.name();
     }
+
     /**
      * Parses a string representation of an expiration date in the format "YYYY-MONTH-DAY"
      * and returns an ExpirationDate object.
@@ -58,19 +60,6 @@ public class ExpirationDate implements Serializable {
      * @return an ExpirationDate object
      * @throws IllegalArgumentException if the format is invalid
      */
-//    public static ExpirationDate parse(String dateStr) {
-//        try {
-//            String[] parts = dateStr.split("-");
-//            int year = Integer.parseInt(parts[0]);
-//            Month month = Month.valueOf(parts[1]);
-//            Day day = Day.valueOf(parts[2]);
-//
-//            return new ExpirationDate(year, month, day);
-//        } catch (Exception e) {
-//            throw new IllegalArgumentException("Invalid date format: " + dateStr, e);
-//        }
-//
-//    }
     public static ExpirationDate parse(String dateStr) {
         try {
             String[] parts = dateStr.split("-");
@@ -90,5 +79,13 @@ public class ExpirationDate implements Serializable {
         }
     }
 
-
+    public int compareTo(ExpirationDate other) {
+        if (this.year != other.year) {
+            return Integer.compare(this.year, other.year);
+        }
+        if (this.month.ordinal() != other.month.ordinal()) {
+            return Integer.compare(this.month.ordinal(), other.month.ordinal());
+        }
+        return Integer.compare(this.day.ordinal(), other.day.ordinal());
+    }
 }
