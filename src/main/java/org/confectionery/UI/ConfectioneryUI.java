@@ -151,7 +151,7 @@ public class ConfectioneryUI {
     private void viewAvailableProducts() {
         System.out.println("Enter a valid date in the form Year-Month( January, February...)-Day(Tenth,Eleventh...)");
         String expirationDate = scanner.nextLine();
-        ExpirationDate date =ExpirationDate.parse(expirationDate);
+        ExpirationDate date = ExpirationDate.parse(expirationDate);
         List<Product> products = controller.getAvailableProducts(date);
         for (Product product : products) {
             System.out.println(product);
@@ -292,7 +292,8 @@ public class ConfectioneryUI {
         Integer id = Integer.parseInt(scanner.nextLine());
         controller.deleteClient(id);
     }
-/// NU UITA CA TREBUIE SA VALIDEZI EMAIL-UL CA SA NU IL INLOCUIESTI CU UNUL DEJA EXISTENT
+
+    /// NU UITA CA TREBUIE SA VALIDEZI EMAIL-UL CA SA NU IL INLOCUIESTI CU UNUL DEJA EXISTENT
     private void updateClient() {
         System.out.println("Enter the id of the client you would like to update:");
         Integer id = Integer.parseInt(scanner.nextLine());
@@ -416,13 +417,12 @@ public class ConfectioneryUI {
 
             ExpirationDate expirationDate = new ExpirationDate(year, month, day);
             scanner.nextLine();
-            try{
+            try {
                 Drink drink = controller.createDrink(name, price, weight, expirationDate, points, alcoholPercentage);
-                if(drink != null) {
-                    System.out.println("Drink with id" + drink.getID() + " created successfully.");
-                }
-                else throw new FailedEntityCreation("Failed to create drink.");
-            }catch (FailedEntityCreation e){
+                if (drink != null) {
+                    System.out.println("Drink with id " + drink.getID() + " created successfully.");
+                } else throw new FailedEntityCreation("Failed to create drink.");
+            } catch (FailedEntityCreation e) {
                 System.out.println(e.getMessage());
             }
 
@@ -448,13 +448,12 @@ public class ConfectioneryUI {
             Day day = Day.values()[expirationDateLocal.getDayOfMonth() - 1];
             ExpirationDate expirationDate = new ExpirationDate(year, month, day);
             scanner.nextLine();
-            try{
+            try {
                 Cake cake = controller.createCake(name, price, weight, expirationDate, points, calories);
-                if(cake != null) {
-                    System.out.println("Cake with id" + cake.getID() + " created successfully.");
-                }
-                else throw new FailedEntityCreation("Failed to create cake.");
-            }catch (FailedEntityCreation e){
+                if (cake != null) {
+                    System.out.println("Cake with id " + cake.getID() + " created successfully.");
+                } else throw new FailedEntityCreation("Failed to create cake.");
+            } catch (FailedEntityCreation e) {
                 System.out.println(e.getMessage());
             }
 
@@ -463,12 +462,13 @@ public class ConfectioneryUI {
             System.out.println("Invalid option. Please choose one of the provided options.");
         }
     }
-/// GRIJA LA UPDATE SA VERIFICI DACA TORTUL ARE NUME UNIC
+
+    /// GRIJA LA UPDATE SA VERIFICI DACA TORTUL ARE NUME UNIC
     private void updateProduct() {
         System.out.println("Enter the id of the product you would like to update:");
         Integer id = Integer.parseInt(scanner.nextLine());
         Product product = controller.getProduct(id);
-        if(product instanceof Drink) {
+        if (product instanceof Drink) {
             System.out.print("Enter drink name: ");
             String name = scanner.nextLine();
             System.out.print("Enter drink price: ");
@@ -485,8 +485,7 @@ public class ConfectioneryUI {
             } catch (EntityNotFoundException e) {
                 System.out.println(e.getMessage());
             }
-        }
-        else if (product instanceof Cake) {
+        } else if (product instanceof Cake) {
             System.out.print("Enter cake name: ");
             String name = scanner.nextLine();
             System.out.print("Enter cake price: ");
@@ -497,10 +496,10 @@ public class ConfectioneryUI {
             int points = scanner.nextInt();
             System.out.print("Enter cake calories: ");
             int calories = scanner.nextInt();
-            try{
-                controller.updateCake(id,name, price, weight,points,calories);
+            try {
+                controller.updateCake(id, name, price, weight, points, calories);
                 System.out.println("Cake with id " + id + " updated successfully.");
-            }catch (EntityNotFoundException e){
+            } catch (EntityNotFoundException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -509,11 +508,10 @@ public class ConfectioneryUI {
     private void deleteProduct() {
         System.out.println("Enter the id of the product you would like to delete:");
         Integer id = Integer.parseInt(scanner.nextLine());
-        if(controller.getProduct(id) != null) {
+        if (controller.getProduct(id) != null) {
             controller.deleteProduct(id);
             System.out.println("Product with id " + id + " deleted successfully.");
-        }
-        else {
+        } else {
             System.out.println("Failed to delete product.");
         }
 
@@ -527,11 +525,13 @@ public class ConfectioneryUI {
         }
     }
 
-    private void getProduct(){
+    private void getProduct() {
         System.out.println("Enter the id of the product you would like to check:");
         Integer id = Integer.parseInt(scanner.nextLine());
         Product product = controller.getProduct(id);
-        System.out.println(product.toString());
+        if (product != null) {
+            System.out.println(product);
+        }
     }
 
     private void balanceInformationMenu() {

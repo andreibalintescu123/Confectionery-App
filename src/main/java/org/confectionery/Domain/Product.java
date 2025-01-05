@@ -7,7 +7,7 @@ import java.io.*;
 public abstract class Product implements HasID, Serializable {
 
 
-    private final int productID;
+    private Integer productID;
     private String name;
     private double price;
     private double weight;
@@ -92,6 +92,10 @@ public abstract class Product implements HasID, Serializable {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void setID(Integer productID) {
+        this.productID = productID;
     }
     /**
      * @return a string that includes the Product id, name, price, weight, expirationDate, and points.
