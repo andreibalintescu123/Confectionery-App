@@ -7,6 +7,10 @@ import org.confectionery.DBRepositories.OrderDBRepository;
 import org.confectionery.DBRepositories.UserDBRepository;
 import org.confectionery.Domain.*;
 import org.confectionery.Exception.ValidationException;
+import org.confectionery.FileRepositories.CakeFileRepository;
+import org.confectionery.FileRepositories.DrinkFileRepository;
+import org.confectionery.FileRepositories.OrderFileRepository;
+import org.confectionery.FileRepositories.UserFileRepository;
 import org.confectionery.Repository.InMemoryRepository;
 import org.confectionery.Repository.Repository;
 import org.confectionery.Service.*;
@@ -37,7 +41,7 @@ public class App {
                 initializeInMemoryStorage();
                 break;
             case "2":
-                //initializeFileStorage();
+                initializeFileStorage();
                 break;
             case "3":
                 initializeDatabaseStorage();
@@ -53,7 +57,6 @@ public class App {
         initializeService();
         initializeController();
         initializeUI();
-        // Start the UI for user interaction
         ui.start();
     }
 
@@ -84,14 +87,18 @@ public class App {
         orderRepository = new InMemoryRepository<>();
     }
 
-//    private void initializeFileStorage() {
-//        System.out.println("Initializing file storage...");
-//        cakeRepository = new FileRepository<>("cakes.csv");
-//        drinkRepository = new FileRepository<>("drinks.csv");
-//        userRepository = new FileRepository<>("users.csv");
-//        orderRepository = new FileRepository<>("orders.csv");
-//    }
-//
+    private void initializeFileStorage() {
+        System.out.println("Initializing file storage...");
+
+        cakeRepository = new CakeFileRepository("src/main/java/org/confectionery/Files/cakes.csv");
+        drinkRepository = new DrinkFileRepository("src/main/java/org/confectionery/Files/drinks.csv");
+        userRepository = new UserFileRepository("src/main/java/org/confectionery/Files/users.csv");
+        orderRepository = new OrderFileRepository("src/main/java/org/confectionery/Files/orders.csv", cakeRepository, drinkRepository);
+
+        System.out.println("File storage initialized successfully.");
+    }
+
+
     private void initializeDatabaseStorage() {
         String DB_URL = "jdbc:sqlite:src/main/java/org/confectionery/confectionery.db";
         String DB_USER = "user";
