@@ -1,7 +1,7 @@
 package org.confectionery.DBRepositories;
 
 import org.confectionery.Domain.Drink;
-import org.confectionery.Domain.ExpirationDate;
+import org.confectionery.Domain.Date;
 import org.confectionery.Repository.DBRepository;
 
 import java.sql.*;
@@ -132,7 +132,7 @@ public class DrinkDBRepository extends DBRepository<Drink> {
         double price = resultSet.getDouble("price");
         double weight = resultSet.getDouble("weight");
         String expirationDateStr = resultSet.getString("expirationDate");
-        ExpirationDate expirationDate = ExpirationDate.parse(expirationDateStr);
+        Date expirationDate = Date.parse(expirationDateStr);
         int points = resultSet.getInt("points");
         double alcoholPercentage = resultSet.getDouble("alcohol");
 

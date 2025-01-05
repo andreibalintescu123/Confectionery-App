@@ -56,11 +56,11 @@ public class ConfectioneryController {
         confectioneryService.updateClient(id, updatedName, updatedEmail, updatedPassword,updatedAddress);
     }
 
-    public Drink createDrink(String name, double price, double weight, ExpirationDate expirationDate, int points, double alcoholPercentage) {
+    public Drink createDrink(String name, double price, double weight, Date expirationDate, int points, double alcoholPercentage) {
         return confectioneryService.createDrink(name,price,weight,expirationDate,points,alcoholPercentage);
     }
 
-    public Cake createCake(String name, double price, double weight, ExpirationDate expirationDate, int points, int calories) {
+    public Cake createCake(String name, double price, double weight, Date expirationDate, int points, int calories) {
         return confectioneryService.createCake(name,price,weight,expirationDate,points,calories);
     }
 
@@ -88,7 +88,24 @@ public class ConfectioneryController {
         return confectioneryService.productsSortedByPoints();
     }
 
-    public List<Product> getAvailableProducts(ExpirationDate expirationDate) {
+    public List<Product> getAvailableProducts(Date expirationDate) {
         return confectioneryService.productsBeforeDate(expirationDate);
+    }
+
+    public Order placeOrder(List<Integer> productIds, Integer clientId) {
+       return confectioneryService.placeOrder(productIds, clientId);
+
+    }
+
+    public void generateInvoice(Integer clientId) {
+        confectioneryService.generateInvoice(clientId);
+    }
+
+    public void viewClientsAndOrders() {
+        confectioneryService.viewClientsAndOrders();
+    }
+
+    public void getWinner() {
+        confectioneryService.viewClientWithMostPoints();
     }
 }

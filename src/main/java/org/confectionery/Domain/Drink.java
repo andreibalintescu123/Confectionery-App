@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Drink extends Product implements Serializable {
 
     private double alcoholPercentage;
-    public Drink(String name, double price, double weight, ExpirationDate expirationDate,int points, double alcohol) {
+    public Drink(String name, double price, double weight, Date expirationDate, int points, double alcohol) {
         super(name, price, weight, expirationDate,points);
         this.alcoholPercentage = alcohol;
     }

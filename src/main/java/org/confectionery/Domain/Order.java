@@ -1,7 +1,6 @@
 package org.confectionery.Domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,15 +10,15 @@ import java.util.List;
 
 public class Order implements HasID, Serializable {
     private final List<Product> products;
-    private final Integer orderID;
-    private final LocalDate date;
-    private int clientID; // New attribute only for testing
+    private Integer orderID;
+    private final Date date;
+    private Integer clientID; // New attribute only for testing
 
     /**
      * @param products A list of products included in the order.
      * @param date     The date when the order was placed.
      */
-    public Order(List<Product> products,LocalDate date) {
+    public Order(List<Product> products, Date date) {
         this.products = products;
         this.orderID = IDGenerator.getInstance().generateID();
         this.date = date;
@@ -54,20 +53,11 @@ public class Order implements HasID, Serializable {
     }
 
     /**
-     * Adds a new product to the order.
-     *
-     * @param p the product which is added to the order
-     */
-    public void addProduct(Product p) {
-        this.products.add(p);
-    }
-
-    /**
      * Returns the date when the order was placed.
      *
      * @return the date of the Order
      */
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -91,10 +81,10 @@ public class Order implements HasID, Serializable {
         return this.orderID;
     }
 
-    /**
-     * method to string ,which returns details of the order
-     * @return details of the order
-     */
+
+    public void setID(Integer id) {
+        this.orderID = id;
+    }
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
