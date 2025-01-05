@@ -11,7 +11,7 @@ public abstract class Product implements HasID, Serializable {
     private String name;
     private double price;
     private double weight;
-    private final ExpirationDate expirationDate;
+    private final Date expirationDate;
     private int points;
 
     /**
@@ -21,7 +21,7 @@ public abstract class Product implements HasID, Serializable {
      * @param expirationDate the product expiration date
      * @param points         the product points
      */
-    public Product( String name, double price, double weight, ExpirationDate expirationDate, int points) {
+    public Product(String name, double price, double weight, Date expirationDate, int points) {
         this.name = name;
         this.price = price;
         this.weight = weight;
@@ -54,7 +54,7 @@ public abstract class Product implements HasID, Serializable {
     /**
      * @return the expiration date.
      */
-    public ExpirationDate getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 

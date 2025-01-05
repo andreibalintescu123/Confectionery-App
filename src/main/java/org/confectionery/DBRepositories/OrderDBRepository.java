@@ -3,14 +3,11 @@ package org.confectionery.DBRepositories;
 
 
 
-import org.confectionery.Domain.Cake;
-import org.confectionery.Domain.Drink;
-import org.confectionery.Domain.Order;
-import org.confectionery.Domain.Product;
+import org.confectionery.Domain.*;
+import org.confectionery.Domain.Date;
 import org.confectionery.Repository.DBRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,7 +150,7 @@ public class OrderDBRepository extends DBRepository<Order> {
             throw new RuntimeException("Error deleting order", e);
         }
     }
-
+// Trebuie legat la client
     @Override
     public List<Order> getAll() {
         String sql = "SELECT * FROM Orders";
@@ -164,9 +161,14 @@ public class OrderDBRepository extends DBRepository<Order> {
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
                 int orderID = resultSet.getInt("orderID");
-                LocalDate date = resultSet.getDate("date").toLocalDate();
+                String expirationDateStr = resultSet.getString("date");
+                Date date = Date.parse(expirationDateStr);
                 List<Product> products = getProductsForOrder(orderID);
-                orders.add(new Order(products, date));
+                int clientID = resultSet.getInt("clientID");
+                Order order = new Order(products, date);
+                order.setID(orderID);
+                order.setClientID(clientID);
+                orders.add(order);
             }
             return orders;
         } catch (SQLException e) {
@@ -204,7 +206,7 @@ public class OrderDBRepository extends DBRepository<Order> {
         return products;
     }
 
-
+// Trebuie legat la client
     @Override
     public Order get(Integer id) {
         String sql = "SELECT * FROM Orders WHERE orderID = ?";
@@ -214,9 +216,15 @@ public class OrderDBRepository extends DBRepository<Order> {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                LocalDate date = resultSet.getDate("date").toLocalDate();
+                Integer orderID = resultSet.getInt("orderID");
+                String expirationDateStr = resultSet.getString("date");
+                Date date = Date.parse(expirationDateStr);
                 List<Product> products = getProductsForOrder(id);
-                return new Order(products,date);
+                int clientID = resultSet.getInt("clientID");
+                Order order = new Order(products, date);
+                order.setID(orderID);
+                order.setClientID(clientID);
+                return order;
             } else {
                 return null;
             }

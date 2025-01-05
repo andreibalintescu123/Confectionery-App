@@ -2,7 +2,7 @@ package org.confectionery.DBRepositories;
 
 
 import org.confectionery.Domain.Cake;
-import org.confectionery.Domain.ExpirationDate;
+import org.confectionery.Domain.Date;
 import org.confectionery.Repository.DBRepository;
 
 import java.sql.*;
@@ -135,7 +135,7 @@ public class CakeDBRepository extends DBRepository<Cake> {
         double price = resultSet.getDouble("price");
         double weight = resultSet.getDouble("weight");
         String expirationDateStr = resultSet.getString("expirationDate");
-        ExpirationDate expirationDate = ExpirationDate.parse(expirationDateStr);
+        Date expirationDate = Date.parse(expirationDateStr);
         int points = resultSet.getInt("points");
         int calories = resultSet.getInt("calories");
 

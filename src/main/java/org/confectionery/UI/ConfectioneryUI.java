@@ -44,7 +44,7 @@ public class ConfectioneryUI {
                 String option = scanner.nextLine();
 
 
-                if (!isValidOption(option, "1", "2", "3", "0")) {
+                if (!isValidOption(option, "1", "2", "0")) {
                     throw new ValidationException("Invalid option. Please select a valid option.");
                 }
 
@@ -142,16 +142,56 @@ public class ConfectioneryUI {
     }
 
     private void generateInvoice() {
+        System.out.println("Generating invoice...\n");
+        Integer clientId = loggedUser.getID();
+        controller.generateInvoice(clientId);
     }
-
+// Consider adding a quantity, especially if you want to order 2 of the same product, because the constraints in the DB will
+    // Not let you add more products
     private void placeOrder() {
+        System.out.println("Enter the IDs of the products you would like to order, one at a time.");
+        System.out.println("Type 'done' when you have finished or 'cancel' to abort the order.");
+        List<Integer> productIds = new ArrayList<>();
 
+        while (true) {
+            System.out.print("Enter product ID: ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("done")) {
+                if (productIds.isEmpty()) {
+                    System.out.println("No products selected. Aborting order.");
+                    return;
+                }
+                break;
+            } else if (input.equalsIgnoreCase("cancel")) {
+                System.out.println("Order cancelled.");
+                return;
+            } else {
+                try {
+                    int productId = Integer.parseInt(input);
+                    productIds.add(productId);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid product ID.");
+                }
+            }
+        }
+        Integer clientId = loggedUser.getID();
+        try {
+            Order order = controller.placeOrder(productIds, clientId);
+            if (order != null) {
+                System.out.println("Order with id " + order.getID() + " has been placed successfully!");
+            } else throw new ValidationException("Order could not be placed.");
+
+        } catch (ValidationException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
+
 
     private void viewAvailableProducts() {
         System.out.println("Enter a valid date in the form Year-Month( January, February...)-Day(Tenth,Eleventh...)");
         String expirationDate = scanner.nextLine();
-        ExpirationDate date = ExpirationDate.parse(expirationDate);
+        Date date = Date.parse(expirationDate);
         List<Product> products = controller.getAvailableProducts(date);
         for (Product product : products) {
             System.out.println(product);
@@ -273,8 +313,10 @@ public class ConfectioneryUI {
                         deleteClient();
                         break;
                     case "6":
+                        viewWinner();
                         break;
                     case "7":
+                        viewClientsAndOrders();
                         break;
                     case "0":
                         clientManagementRunning = false;
@@ -285,6 +327,16 @@ public class ConfectioneryUI {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private void viewClientsAndOrders() {
+        System.out.println("Here are all clients and their respective orders:");
+        controller.viewClientsAndOrders();
+    }
+
+    private void viewWinner() {
+        System.out.println("Client with the most points is:");
+        controller.getWinner();
     }
 
     private void deleteClient() {
@@ -415,7 +467,7 @@ public class ConfectioneryUI {
             Month month = Month.values()[expirationDateLocal.getMonthValue() - 1];
             Day day = Day.values()[expirationDateLocal.getDayOfMonth() - 1];
 
-            ExpirationDate expirationDate = new ExpirationDate(year, month, day);
+            Date expirationDate = new Date(year, month, day);
             scanner.nextLine();
             try {
                 Drink drink = controller.createDrink(name, price, weight, expirationDate, points, alcoholPercentage);
@@ -446,7 +498,7 @@ public class ConfectioneryUI {
             int year = expirationDateLocal.getYear();
             Month month = Month.values()[expirationDateLocal.getMonthValue() - 1];
             Day day = Day.values()[expirationDateLocal.getDayOfMonth() - 1];
-            ExpirationDate expirationDate = new ExpirationDate(year, month, day);
+            Date expirationDate = new Date(year, month, day);
             scanner.nextLine();
             try {
                 Cake cake = controller.createCake(name, price, weight, expirationDate, points, calories);
@@ -551,10 +603,13 @@ public class ConfectioneryUI {
                 }
                 switch (option) {
                     case "1":
+                        totalBalance();
                         break;
                     case "2":
+                        monthlyBalance();
                         break;
                     case "3":
+                        yearlyBalance();
                         break;
                     case "0":
                         balanceInformationRunning = false;
@@ -564,6 +619,15 @@ public class ConfectioneryUI {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private void yearlyBalance() {
+    }
+
+    private void monthlyBalance() {
+    }
+
+    private void totalBalance() {
     }
 
     public void createAccount() {

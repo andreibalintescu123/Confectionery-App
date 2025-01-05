@@ -3,6 +3,7 @@ package org.confectionery.Service;
 import org.confectionery.Domain.*;
 import org.confectionery.Exception.EntityNotFoundException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ConfectioneryService {
         userService.updateClient(id, updatedName, updatedEmail, updatedPassword, updatedAddress);
     }
 
-    public Drink createDrink(String name, double price, double weight, ExpirationDate expirationDate, int points, double alcoholPercentage) {
+    public Drink createDrink(String name, double price, double weight, Date expirationDate, int points, double alcoholPercentage) {
         Drink drink = new Drink(name, price, weight, expirationDate, points, alcoholPercentage);
         if (drinkService.getAllDrinks().stream().anyMatch(d -> d.getName().equals(name)))
             return null;
@@ -101,7 +102,7 @@ public class ConfectioneryService {
 
     }
 
-    public Cake createCake(String name, double price, double weight, ExpirationDate expirationDate, int points, int calories) {
+    public Cake createCake(String name, double price, double weight, Date expirationDate, int points, int calories) {
         Cake cake = new Cake(name, price, weight, expirationDate, points, calories);
         if (cakeService.getAllCakes().stream().anyMatch(c -> c.getName().equals(name)))
             return null;
@@ -204,7 +205,7 @@ public class ConfectioneryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Product> productsBeforeDate(ExpirationDate date) {
+    public List<Product> productsBeforeDate(Date date) {
         // Retrieve all drinks and cakes
         List<Drink> drinks = drinkService.getAllDrinks();
         List<Cake> cakes = cakeService.getAllCakes();
@@ -219,4 +220,144 @@ public class ConfectioneryService {
                 .filter(product -> product.getExpirationDate().compareTo(date) > 0)
                 .collect(Collectors.toList());
     }
+
+    public Order placeOrder(List<Integer> productIds, Integer clientId) {
+        List<Product> products = new ArrayList<>();
+        for (Integer productId : productIds) {
+            if(getProduct(productId) != null) {
+                products.add(getProduct(productId));
+            }
+        }
+        Date date = Date.convertLocalDateToDate(LocalDate.now());
+        Order order = new Order(products, date);
+        order.setClientID(clientId);
+        orderService.createOrder(order);
+        return order;
+    }
+
+    /**
+     * Prints the invoice for all the orders placed by the client.
+     * It shows the products ordered, their prices, and points, as well as the total for each order.
+     * If there are multiple orders, it also shows the grand total and total points.
+     */
+    public void generateInvoice(Integer clientId) {
+        List<Order> clientOrders = orderService.findOrdersByClientId(clientId);
+
+        if (clientOrders.isEmpty()) {
+            System.out.println("Client ID: " + clientId + " has no orders yet.\n");
+            return;
+        }
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("                 INVOICE                          ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("Client ID: " + clientId);
+        System.out.println("Number of Orders: " + clientOrders.size());
+        System.out.println("--------------------------------------------------");
+
+        float grandTotal = 0;
+        int grandTotalPoints = 0;
+
+        for (Order order : clientOrders) {
+            System.out.println("Order ID: " + order.getID());
+            System.out.println("Date: " + order.getDate());
+            System.out.println("--------------------------------------------------");
+            System.out.printf("%-30s %-10s %-10s%n", "Product Name", "Price (lei)", "Points");
+
+            for (Product product : order.getProducts()) {
+                System.out.printf("%-30s %-10.2f %-10d%n", product.getName(), product.getPrice(), product.getPoints());
+            }
+
+
+            System.out.println("--------------------------------------------------");
+            System.out.printf("Order Total: %-32.2f Points: %d%n", order.getTotal(), order.getTotalPoints());
+            System.out.println("--------------------------------------------------");
+
+
+            grandTotal += order.getTotal();
+            grandTotalPoints += order.getTotalPoints();
+        }
+
+        System.out.println("==================================================");
+        System.out.printf("GRAND TOTAL: %-32.2f Points: %d%n", grandTotal, grandTotalPoints);
+        System.out.println("==================================================\n");
+    }
+
+    public void viewClientsAndOrders() {
+        List<User> users = userService.getAllUsers();
+        List<Client> clients = new ArrayList<>();
+        for (User user : users) {
+            if (user instanceof Client) {
+                clients.add((Client) user);
+            }
+        }
+
+        if (clients.isEmpty()) {
+            System.out.println("No clients available.");
+            return;
+        }
+        for (Client client : clients) {
+            System.out.println("Client ID: " + client.getID());
+            System.out.println("Name: " + client.getName());
+            List<Order> clientOrders = orderService.findOrdersByClientId(client.getID());
+
+            if (clientOrders.isEmpty()) {
+                System.out.println("No orders for this client.");
+            } else {
+                for (Order order : clientOrders) {
+                    System.out.println("Order ID: " + order.getID());
+                    System.out.println("Date: " + order.getDate() + "\n");
+                    System.out.println("Products:");
+                    for (Product product : order.getProducts()) {
+                        System.out.printf("  - %s (%.2f lei, %d points)%n",
+                                product.getName(),
+                                product.getPrice(),
+                                product.getPoints());
+                    }
+                    System.out.printf("Order Total: %.2f lei | Points: %d%n",
+                            order.getTotal(),
+                            order.getTotalPoints());
+                }
+            }
+            System.out.println();
+        }
+    }
+
+
+    public void viewClientWithMostPoints() {
+        List<User> users = userService.getAllUsers();
+        List<Client> clients = new ArrayList<>();
+        for (User user : users) {
+            if (user instanceof Client) {
+                clients.add((Client) user);
+            }
+        }
+
+        if (clients.isEmpty()) {
+            System.out.println("No clients available.");
+            return;
+        }
+
+        Client clientWithMostPoints = null;
+        int maxPoints = 0;
+
+        for (Client client : clients) {
+            int totalPoints = orderService.findOrdersByClientId(client.getID())
+                    .stream()
+                    .mapToInt(Order::getTotalPoints)
+                    .sum();
+            if (totalPoints > maxPoints) {
+                maxPoints = totalPoints;
+                clientWithMostPoints = client;
+            }
+        }
+        if (clientWithMostPoints != null) {
+            System.out.println("Client ID: " + clientWithMostPoints.getID());
+            System.out.println("Name: " + clientWithMostPoints.getName());
+            System.out.println("Total Points: " + maxPoints);
+        } else {
+            System.out.println("No points available for any client.");
+        }
+    }
+
 }

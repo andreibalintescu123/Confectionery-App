@@ -106,16 +106,16 @@ public class App {
     private void populateRepositories() {
         System.out.println("Populating repositories with sample data...");
 
-        ExpirationDate expirationDate1 = new ExpirationDate(2026, Month.February, Day.Eleventh);
-        ExpirationDate expirationDate3 = new ExpirationDate(2024, Month.December, Day.Eighteenth);
-        ExpirationDate expirationDate4 = new ExpirationDate(2024, Month.December, Day.First);
-        ExpirationDate expirationDate2 = new ExpirationDate(2024, Month.November, Day.Thirteenth);
-        ExpirationDate expirationDate5 = new ExpirationDate(2024, Month.December, Day.Fourteenth);
-        ExpirationDate expirationDate6 = new ExpirationDate(2025, Month.April, Day.Fifteenth);
-        ExpirationDate expirationDate7 = new ExpirationDate(2024, Month.May, Day.TwentyFourth);
-        ExpirationDate expirationDate8 = new ExpirationDate(2026, Month.July, Day.TwentyFirst);
-        ExpirationDate expirationDate9 = new ExpirationDate(2023, Month.March, Day.Thirteenth);
-        ExpirationDate expirationDate10 = new ExpirationDate(2027, Month.January, Day.First);
+        Date expirationDate1 = new Date(2026, Month.February, Day.Eleventh);
+        Date expirationDate3 = new Date(2024, Month.December, Day.Eighteenth);
+        Date expirationDate4 = new Date(2024, Month.December, Day.First);
+        Date expirationDate2 = new Date(2024, Month.November, Day.Thirteenth);
+        Date expirationDate5 = new Date(2024, Month.December, Day.Fourteenth);
+        Date expirationDate6 = new Date(2025, Month.April, Day.Fifteenth);
+        Date expirationDate7 = new Date(2024, Month.May, Day.TwentyFourth);
+        Date expirationDate8 = new Date(2026, Month.July, Day.TwentyFirst);
+        Date expirationDate9 = new Date(2023, Month.March, Day.Thirteenth);
+        Date expirationDate10 = new Date(2027, Month.January, Day.First);
 
         drinkRepository.create(new Drink("Water", 10, 50, expirationDate6, 30, 0));
         drinkRepository.create(new Drink("Cappuccino", 15, 200, expirationDate7, 45, 0));

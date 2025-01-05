@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Cake extends Product implements Serializable {
 
     private int calories;
-    public Cake(String name, double price, double weight, ExpirationDate expirationDate,int points, int calories) {
+    public Cake(String name, double price, double weight, Date expirationDate, int points, int calories) {
         super(name, price, weight, expirationDate,points);
         this.calories=calories;
     }
