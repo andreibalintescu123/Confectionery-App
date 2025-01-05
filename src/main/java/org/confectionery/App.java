@@ -1,6 +1,10 @@
 package org.confectionery;
 
 import org.confectionery.Controller.ConfectioneryController;
+import org.confectionery.DBRepositories.CakeDBRepository;
+import org.confectionery.DBRepositories.DrinkDBRepository;
+import org.confectionery.DBRepositories.OrderDBRepository;
+import org.confectionery.DBRepositories.UserDBRepository;
 import org.confectionery.Domain.*;
 import org.confectionery.Exception.ValidationException;
 import org.confectionery.Repository.InMemoryRepository;
@@ -36,7 +40,7 @@ public class App {
                 //initializeFileStorage();
                 break;
             case "3":
-                //initializeDatabaseStorage();
+                initializeDatabaseStorage();
                 break;
             case "4":
                 System.out.println("Exiting the application. Goodbye!");
@@ -88,13 +92,16 @@ public class App {
 //        orderRepository = new FileRepository<>("orders.csv");
 //    }
 //
-//    private void initializeDatabaseStorage() {
-//        System.out.println("Initializing database storage...");
-//        cakeRepository = new DBRepository<>("cakes", Cake.class);
-//        drinkRepository = new DBRepository<>("drinks", Drink.class);
-//        userRepository = new DBRepository<>("users", User.class);
-//        orderRepository = new DBRepository<>("orders", Order.class);
-//    }
+    private void initializeDatabaseStorage() {
+        String DB_URL = "jdbc:sqlite:src/main/java/org/confectionery/confectionery.db";
+        String DB_USER = "user";
+        String DB_PASSWORD = "password";
+        System.out.println("Initializing database storage...");
+        cakeRepository = new CakeDBRepository(DB_URL,DB_USER,DB_PASSWORD);
+        drinkRepository = new DrinkDBRepository(DB_URL,DB_USER,DB_PASSWORD );
+        userRepository = new UserDBRepository(DB_URL,DB_USER,DB_PASSWORD );
+        orderRepository = new OrderDBRepository(DB_URL,DB_USER,DB_PASSWORD );
+    }
 
     private void populateRepositories() {
         System.out.println("Populating repositories with sample data...");

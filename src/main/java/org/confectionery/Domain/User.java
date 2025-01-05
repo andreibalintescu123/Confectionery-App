@@ -63,6 +63,9 @@ public abstract class User implements HasID, Serializable {
         return userID;
     }
 
+    public void setID(Integer userID) {
+        this.userID = userID;
+    }
     public abstract String toString();
 
 }
