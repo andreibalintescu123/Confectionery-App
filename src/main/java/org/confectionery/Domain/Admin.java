@@ -21,6 +21,11 @@ public class Admin extends User implements Serializable {
 
     }
 
+    public Admin(Integer id,String name, String email, String password) {
+        super(id,name,email,password);
+        this.status = "Inactive";
+    }
+
     public String getStatus() {
         return status;
     }

@@ -60,5 +60,6 @@ public class DrinkService {
     public void deleteDrink(int id) {
         drinkRepository.delete(id);
     }
+
 }
 

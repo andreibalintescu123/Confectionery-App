@@ -24,6 +24,12 @@ public abstract class User implements HasID, Serializable {
         this.userID = IDGenerator.getInstance().generateID();
     }
 
+    public User(Integer id, String name, String email, String password) {
+        this.userID = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     /**
      * Gets the name of the user.

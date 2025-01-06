@@ -36,10 +36,7 @@ public class CakeFileRepository extends FileRepository<Cake> {
             Date expirationDate = Date.parse(parts[4]);
             int points = Integer.parseInt(parts[5]);
             int calories = Integer.parseInt(parts[6]);
-
-            Cake cake = new Cake(name, price, weight, expirationDate, points, calories);
-            cake.setID(id);
-            return cake;
+            return new Cake(id,name, price, weight, expirationDate, points, calories);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error deserializing Cake: " + data, e);
         }

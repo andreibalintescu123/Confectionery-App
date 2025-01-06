@@ -19,7 +19,7 @@ public class DrinkDBRepository extends DBRepository<Drink> {
     private void createTableIfNotExists() {
         String sql = """
             CREATE TABLE IF NOT EXISTS Drinks (
-                drinkID INT PRIMARY KEY,
+                drinkID INTEGER PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 price DOUBLE NOT NULL,
                 weight DOUBLE NOT NULL,
@@ -97,7 +97,10 @@ public class DrinkDBRepository extends DBRepository<Drink> {
             List<Drink> drinks = new ArrayList<>();
 
             while (resultSet.next()) {
-                drinks.add(extractFromResultSet(resultSet));
+                String date = resultSet.getString("expirationDate");
+                Date expirationDate = Date.parse(date);
+                Drink drink = new Drink(resultSet.getInt("drinkID"),resultSet.getString("name"), resultSet.getDouble("price"), resultSet.getDouble("weight"), expirationDate, resultSet.getInt("points"), resultSet.getInt("alcohol"));
+                drinks.add(drink);
             }
 
             return drinks;
@@ -116,7 +119,9 @@ public class DrinkDBRepository extends DBRepository<Drink> {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return extractFromResultSet(resultSet);
+                String date = resultSet.getString("expirationDate");
+                Date expirationDate = Date.parse(date);
+                return new Drink(resultSet.getInt("drinkID"),resultSet.getString("name"), resultSet.getDouble("price"), resultSet.getDouble("weight"), expirationDate, resultSet.getInt("points"), resultSet.getInt("alcohol"));
             } else {
                 return null;
             }
@@ -125,19 +130,4 @@ public class DrinkDBRepository extends DBRepository<Drink> {
         }
     }
 
-
-    public static Drink extractFromResultSet(ResultSet resultSet) throws SQLException {
-        Integer id = resultSet.getInt("drinkID");
-        String name = resultSet.getString("name");
-        double price = resultSet.getDouble("price");
-        double weight = resultSet.getDouble("weight");
-        String expirationDateStr = resultSet.getString("expirationDate");
-        Date expirationDate = Date.parse(expirationDateStr);
-        int points = resultSet.getInt("points");
-        double alcoholPercentage = resultSet.getDouble("alcohol");
-
-        Drink drink = new Drink(name, price, weight, expirationDate, points, alcoholPercentage);
-        drink.setID(id);
-        return drink;
-    }
 }

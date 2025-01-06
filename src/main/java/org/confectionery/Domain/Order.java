@@ -25,7 +25,12 @@ public class Order implements HasID, Serializable {
         this.clientID = -1; // Default value (e.g., unassigned client)
     }
 
-
+    public Order(Integer id,List<Product> products, Date date) {
+        this.products = products;
+        this.orderID = id;
+        this.date = date;
+        this.clientID = -1; // Default value (e.g., unassigned client)
+    }
     /**
      * Calculates the total price of the order by summing the prices of all products in the order
      *

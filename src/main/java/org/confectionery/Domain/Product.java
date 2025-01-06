@@ -30,6 +30,15 @@ public abstract class Product implements HasID, Serializable {
         this.productID = IDGenerator.getInstance().generateID();
     }
 
+    public Product(Integer id, String name, double price, double weight, Date expirationDate, int points) {
+        this.productID = id;
+        this.name = name;
+        this.price = price;
+        this.weight = weight;
+        this.expirationDate = expirationDate;
+        this.points = points;
+    }
+
     /**
      * @return the name.
      */

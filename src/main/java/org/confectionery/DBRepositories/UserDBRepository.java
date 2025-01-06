@@ -21,7 +21,7 @@ public class UserDBRepository extends DBRepository<User> {
     private void Client() {
         String sql = """
                     CREATE TABLE IF NOT EXISTS Clients (
-                        ID INT PRIMARY KEY,
+                        ID INTEGER PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         email VARCHAR(255) NOT NULL,
                         password VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ public class UserDBRepository extends DBRepository<User> {
     private void Admin() {
         String sql = """
                     CREATE TABLE IF NOT EXISTS Admins (
-                        ID INT PRIMARY KEY,
+                        ID INTEGER PRIMARY KEY ,
                         name VARCHAR(255) NOT NULL,
                         email VARCHAR(255) NOT NULL,
                         password VARCHAR(255) NOT NULL,
@@ -61,12 +61,11 @@ public class UserDBRepository extends DBRepository<User> {
         if (user instanceof Admin) {
             sql = "INSERT INTO Admins (ID, name, email, password, status) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                Admin admin = (Admin) user;
-                statement.setInt(1, admin.getID());
-                statement.setString(2, admin.getName());
-                statement.setString(3, admin.getEmail());
-                statement.setString(4, admin.getPassword());
-                statement.setString(5, admin.getStatus());
+                statement.setInt(1, user.getID());
+                statement.setString(2, user.getName());
+                statement.setString(3, user.getEmail());
+                statement.setString(4, user.getPassword());
+                statement.setString(5, ((Admin) user).getStatus());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -156,7 +155,6 @@ public class UserDBRepository extends DBRepository<User> {
     }
 
 
-
     @Override
     public User get(Integer id) {
         // Query the Clients table first
@@ -166,7 +164,7 @@ public class UserDBRepository extends DBRepository<User> {
             ResultSet clientResultSet = clientStmt.executeQuery();
 
             if (clientResultSet.next()) {
-                return extractClientFromResultSet(clientResultSet);
+                return new Client(clientResultSet.getInt("ID"),clientResultSet.getString("name"), clientResultSet.getString("email"), clientResultSet.getString("password"), clientResultSet.getString("address"));
             }
         } catch (SQLException ex) {
             throw new RuntimeException("Error querying Clients table", ex);
@@ -179,7 +177,9 @@ public class UserDBRepository extends DBRepository<User> {
             ResultSet adminResultSet = adminStmt.executeQuery();
 
             if (adminResultSet.next()) {
-                return extractAdminFromResultSet(adminResultSet);
+            Admin admin = new Admin(adminResultSet.getInt("ID"),adminResultSet.getString("name"), adminResultSet.getString("email"), adminResultSet.getString("password"));
+            admin.setStatus(adminResultSet.getString("status"));
+            return admin;
             }
         } catch (SQLException ex) {
             throw new RuntimeException("Error querying Admins table", ex);
@@ -199,7 +199,9 @@ public class UserDBRepository extends DBRepository<User> {
         try (PreparedStatement statement = connection.prepareStatement(sqlAdmin)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                users.add(extractAdminFromResultSet(resultSet));
+                Admin admin = new Admin(resultSet.getInt("ID"),resultSet.getString("name"), resultSet.getString("email"), resultSet.getString("password"));
+                admin.setStatus(resultSet.getString("status"));
+                users.add(admin);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -210,7 +212,8 @@ public class UserDBRepository extends DBRepository<User> {
         try (PreparedStatement statement = connection.prepareStatement(sqlClient)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                users.add(extractClientFromResultSet(resultSet));
+                Client client = new Client(resultSet.getInt("ID"),resultSet.getString("name"), resultSet.getString("email"),resultSet.getString("password"), resultSet.getString("address"));
+                users.add(client);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -219,26 +222,4 @@ public class UserDBRepository extends DBRepository<User> {
         return users;
     }
 
-    private Admin extractAdminFromResultSet(ResultSet resultSet) throws SQLException {
-        Integer id = resultSet.getInt("ID");
-        String name = resultSet.getString("name");
-        String email = resultSet.getString("email");
-        String password = resultSet.getString("password");
-
-        Admin admin = new Admin(name, email, password);
-        admin.setID(id);
-        return admin;
-    }
-
-    private Client extractClientFromResultSet(ResultSet resultSet) throws SQLException {
-        Integer id = resultSet.getInt("ID");
-        String name = resultSet.getString("name");
-        String email = resultSet.getString("email");
-        String password = resultSet.getString("password");
-        String address = resultSet.getString("address");
-
-        Client client = new Client(name, email, password, address);
-        client.setID(id);
-        return client;
-    }
 }
