@@ -36,9 +36,7 @@ public class DrinkFileRepository extends FileRepository<Drink> {
             Date expirationDate = Date.parse(parts[4]);
             int points = Integer.parseInt(parts[5]);
             double alcoholPercentage = Double.parseDouble(parts[6]);
-            Drink drink = new Drink(name, price, volume, expirationDate, points, alcoholPercentage);
-            drink.setID(id);
-            return drink;
+            return new Drink(id,name, price, volume, expirationDate, points, alcoholPercentage);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error deserializing Drink: " + data, e);
         }

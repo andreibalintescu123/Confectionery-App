@@ -103,8 +103,8 @@ public class ConfectioneryService {
     }
 
     public Cake createCake(String name, double price, double weight, Date expirationDate, int points, int calories) {
-        Cake cake = new Cake(name, price, weight, expirationDate, points, calories);
-        if (cakeService.getAllCakes().stream().anyMatch(c -> c.getName().equals(name)))
+        Cake cake = new Cake(name, price, weight, expirationDate, points, calories); // AICI ISI IA ID-UL
+        if (cakeService.getAllCakes().stream().anyMatch(c -> c.getName().equals(name))) // INAINTE SA FIE INCREMENTAT DE TOT NR DE CAKE-URI DIN BAZA DE DATE
             return null;
         else
         {

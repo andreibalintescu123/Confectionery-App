@@ -68,8 +68,7 @@ public class OrderFileRepository extends FileRepository<Order> {
             Date date = Date.parse(parts[2]);
             int clientID = Integer.parseInt(parts[3]);
 
-            Order order = new Order(products, date);
-            order.setID(orderID);
+            Order order = new Order(orderID,products, date);
             order.setClientID(clientID);
 
             return order;

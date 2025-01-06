@@ -14,6 +14,12 @@ public class Drink extends Product implements Serializable {
         this.alcoholPercentage = alcohol;
     }
 
+    public Drink(Integer id,String name, double price, double weight, Date expirationDate, int points, double alcohol) {
+        super(id, name, price, weight, expirationDate,points);
+        this.alcoholPercentage = alcohol;
+
+    }
+
 
     /**
      * gets the alcohol from the Drinks

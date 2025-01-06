@@ -20,7 +20,7 @@ public class CakeDBRepository extends DBRepository<Cake> {
     private void createTableIfNotExists() {
         String sql = """
             CREATE TABLE IF NOT EXISTS Cakes (
-                cakeID INT PRIMARY KEY,
+                cakeID INTEGER PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 price DOUBLE NOT NULL,
                 weight DOUBLE NOT NULL,
@@ -96,7 +96,10 @@ public class CakeDBRepository extends DBRepository<Cake> {
             List<Cake> cakes = new ArrayList<>();
 
             while (resultSet.next()) {
-                cakes.add(extractFromResultSet(resultSet));
+                String date = resultSet.getString("expirationDate");
+                Date expirationDate = Date.parse(date);
+                Cake cake = new Cake(resultSet.getInt("cakeID"),resultSet.getString("name"), resultSet.getDouble("price"), resultSet.getDouble("weight"), expirationDate, resultSet.getInt("points"), resultSet.getInt("calories"));
+                cakes.add(cake);
             }
 
             return cakes;
@@ -112,7 +115,9 @@ public class CakeDBRepository extends DBRepository<Cake> {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return extractFromResultSet(resultSet);
+                String date = resultSet.getString("expirationDate");
+                Date expirationDate = Date.parse(date);
+                return new Cake(resultSet.getInt("cakeID"),resultSet.getString("name"), resultSet.getDouble("price"), resultSet.getDouble("weight"), expirationDate, resultSet.getInt("points"), resultSet.getInt("calories"));
             } else {
                 return null;
             }
@@ -122,27 +127,6 @@ public class CakeDBRepository extends DBRepository<Cake> {
     }
 
 
-    /**
-     * Extracts a Cake object from the result set.
-     *
-     * @param resultSet the result set containing the data
-     * @return the Cake object
-     * @throws SQLException if there is an issue with the result set
-     */
-    public static Cake extractFromResultSet(ResultSet resultSet) throws SQLException {
-        Integer id = resultSet.getInt("cakeID");
-        String name = resultSet.getString("name");
-        double price = resultSet.getDouble("price");
-        double weight = resultSet.getDouble("weight");
-        String expirationDateStr = resultSet.getString("expirationDate");
-        Date expirationDate = Date.parse(expirationDateStr);
-        int points = resultSet.getInt("points");
-        int calories = resultSet.getInt("calories");
-
-        Cake cake = new Cake(name, price, weight, expirationDate, points, calories);
-        cake.setID(id);
-        return cake;
-    }
 }
 
 

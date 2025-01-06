@@ -28,7 +28,7 @@ public class OrderDBRepository extends DBRepository<Order> {
     private void createTableIfNotExists() {
         String sql = """
         CREATE TABLE IF NOT EXISTS Orders (
-            orderID INT PRIMARY KEY,
+            orderID INTEGER PRIMARY KEY AUTOINCREMENT ,
             date DATE,
             clientID INTEGER NOT NULL,
             FOREIGN KEY (clientID) REFERENCES Clients(ID) ON DELETE CASCADE
@@ -150,7 +150,7 @@ public class OrderDBRepository extends DBRepository<Order> {
             throw new RuntimeException("Error deleting order", e);
         }
     }
-// Trebuie legat la client
+
     @Override
     public List<Order> getAll() {
         String sql = "SELECT * FROM Orders";
@@ -165,8 +165,7 @@ public class OrderDBRepository extends DBRepository<Order> {
                 Date date = Date.parse(expirationDateStr);
                 List<Product> products = getProductsForOrder(orderID);
                 int clientID = resultSet.getInt("clientID");
-                Order order = new Order(products, date);
-                order.setID(orderID);
+                Order order = new Order(orderID,products, date);
                 order.setClientID(clientID);
                 orders.add(order);
             }
@@ -206,7 +205,6 @@ public class OrderDBRepository extends DBRepository<Order> {
         return products;
     }
 
-// Trebuie legat la client
     @Override
     public Order get(Integer id) {
         String sql = "SELECT * FROM Orders WHERE orderID = ?";
@@ -221,8 +219,7 @@ public class OrderDBRepository extends DBRepository<Order> {
                 Date date = Date.parse(expirationDateStr);
                 List<Product> products = getProductsForOrder(id);
                 int clientID = resultSet.getInt("clientID");
-                Order order = new Order(products, date);
-                order.setID(orderID);
+                Order order = new Order(orderID,products, date);
                 order.setClientID(clientID);
                 return order;
             } else {

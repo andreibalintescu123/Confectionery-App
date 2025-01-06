@@ -14,6 +14,11 @@ public class Cake extends Product implements Serializable {
         this.calories=calories;
     }
 
+    public Cake(Integer id, String name, double price, double weight, Date expirationDate, int points, int calories) {
+        super(id, name, price, weight, expirationDate,points);
+        this.calories=calories;
+    }
+
     public void setCalories(int calories) {
         this.calories = calories;
     }

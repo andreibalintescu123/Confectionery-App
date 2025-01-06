@@ -20,6 +20,11 @@ public class Client extends User implements Serializable {
         this.address = address;
     }
 
+    public Client(Integer id, String name, String email, String password, String address) {
+        super(id, name, email, password);
+        this.address = address;
+    }
+
     public String getAddress() {
         return address;
     }

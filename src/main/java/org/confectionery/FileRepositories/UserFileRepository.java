@@ -33,8 +33,7 @@ public class UserFileRepository extends FileRepository<User> {
                 String email = parts[3];
                 String password = parts[4];
                 String status = parts[5];
-                Admin admin = new Admin(name, email, password);
-                admin.setID(id);
+                Admin admin = new Admin(id,name, email, password);
                 admin.setStatus(status);
                 return admin;
             } else if ("Client".equals(type)) {
@@ -42,9 +41,7 @@ public class UserFileRepository extends FileRepository<User> {
                 String email = parts[3];
                 String password = parts[4];
                 String address = parts[5];
-                Client client = new Client(name, email, password, address);
-                client.setID(id);
-                return client;
+                return new Client(id,name, email, password, address);
             }
 
             throw new IllegalArgumentException("Unknown User type: " + type);
