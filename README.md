@@ -1,4 +1,4 @@
-![schema](https://github.com/user-attachments/assets/e7498dee-69fe-442a-b0ab-b28c83f086f7)Confectionery
+Confectionery
 
 A Confectionery needs a console app for managing customer orders and tracking sales progress. Customers will have the ability to explore products, place orders, and receive invoices, while administrators will oversee operations and financial tracking.
 
@@ -35,6 +35,7 @@ Administrators will have the following functionalities upon logging into the app
 6.	View Financials: Administrators can view income reports, including monthly and yearly income. This feature helps in tracking sales performance and making informed business decisions.
 7.	Customer Recognition Program: At the end of the year, the customer with the most orders will be recognized and awarded a trip as a special incentive.
 
-![schema](https://github.com/user-attachments/assets/6e25637c-4fcf-47ca-b063-ae1c17cb52e5)
+
+![schema](https://github.com/user-attachments/assets/b0c71b4b-378b-4e5e-93c7-8c9ff7924148)
 
 
