@@ -120,4 +120,12 @@ public class ConfectioneryController {
     public void getTotalBalance() {
         confectioneryService.getTotalBalance();
     }
+
+    public Order getOrder(Integer id) {
+        return confectioneryService.getOrder(id);
+    }
+
+    public void deleteOrder(Integer id) {
+        confectioneryService.deleteOrder(id);
+    }
 }

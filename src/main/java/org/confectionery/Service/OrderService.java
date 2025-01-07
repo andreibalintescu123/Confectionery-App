@@ -2,8 +2,6 @@ package org.confectionery.Service;
 
 import org.confectionery.Domain.Order;
 import org.confectionery.Repository.Repository;
-
-import java.time.LocalDate;
 import java.util.List;
 
 public class OrderService {
@@ -23,10 +21,6 @@ public class OrderService {
 
     public List<Order> getAllOrders() {
         return orderRepository.getAll();
-    }
-
-    public void updateOrder(Order order) {
-        orderRepository.update(order);
     }
 
     public void deleteOrder(int id) {

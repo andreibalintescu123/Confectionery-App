@@ -90,17 +90,18 @@ public class ConfectioneryUI {
                         1. View Menu order by Points
                         2. View Menu order by Price
                         3. Place Order
-                        4. Generate Invoice
-                        5. View Profile
-                        6. View Drinks With Alcohol
-                        7. View Products available until a given date
+                        4. Delete Order
+                        5. Generate Invoice
+                        6. View Profile
+                        7. View Drinks With Alcohol
+                        8. View Products available until a given date
                         0. Logout
                         Please select an option:
                         """);
 
                 String option = scanner.nextLine().trim();
 
-                if (!isValidOption(option, "1", "2", "3", "4", "5", "6", "7", "0")) {
+                if (!isValidOption(option, "1", "2", "3", "4", "5", "6", "7", "8", "0")) {
                     throw new ValidationException("Invalid option. Please select a valid option.");
                 }
 
@@ -116,15 +117,18 @@ public class ConfectioneryUI {
                         placeOrder();
                         break;
                     case "4":
-                        generateInvoice();
+                        deleteOrder();
                         break;
                     case "5":
-                        viewProfile();
+                        generateInvoice();
                         break;
                     case "6":
-                        viewAlcoholicDrinks();
+                        viewProfile();
                         break;
                     case "7":
+                        viewAlcoholicDrinks();
+                        break;
+                    case "8":
                         viewAvailableProducts();
                         break;
                     case "0":
@@ -139,6 +143,18 @@ public class ConfectioneryUI {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private void deleteOrder() {
+        System.out.println("Enter the id of the order you would like to delete:");
+        Integer id = Integer.parseInt(scanner.nextLine());
+        if (controller.getOrder(id) != null) {
+            controller.deleteOrder(id);
+            System.out.println("Order with id " + id + " deleted successfully.");
+        } else {
+            System.out.println("Failed to delete order.");
+        }
+
     }
 
     private void generateInvoice() {
