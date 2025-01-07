@@ -24,6 +24,7 @@ Customer Recognition Program:
 At the end of the year, the customer with the most orders will be recognized and awarded a trip as a special incentive.
 
 
-![uml](https://github.com/user-attachments/assets/7429b8fb-740e-4779-926a-a3b1c317d5bf)
+![schema](https://github.com/user-attachments/assets/862fcb28-ef34-4ace-87fd-1cc3e4d56c0f)
+
 
 
