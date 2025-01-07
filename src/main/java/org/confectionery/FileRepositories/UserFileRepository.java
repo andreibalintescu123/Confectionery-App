@@ -1,9 +1,9 @@
 package org.confectionery.FileRepositories;
 
-import org.confectionery.Domain.Admin;
-import org.confectionery.Domain.Client;
-import org.confectionery.Domain.User;
+import org.confectionery.Domain.*;
 import org.confectionery.Repository.FileRepository;
+
+import java.util.List;
 
 public class UserFileRepository extends FileRepository<User> {
 
@@ -48,6 +48,17 @@ public class UserFileRepository extends FileRepository<User> {
         } catch (Exception e) {
             throw new IllegalArgumentException("Error deserializing User: " + data, e);
         }
+    }
+
+    @Override
+    public Integer getMaxID() {
+        List<User> allUsers = getAll();
+
+        // Use a stream to find the maximum ID among all cakes
+        return allUsers.stream()
+                .mapToInt(HasID::getID) // Extract the ID of each cake
+                .max() // Get the maximum value
+                .orElse(-1); // Return -1 if the file is empty
     }
 }
 

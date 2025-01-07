@@ -76,4 +76,15 @@ public class OrderFileRepository extends FileRepository<Order> {
             throw new IllegalArgumentException("Error deserializing Order: " + data, e);
         }
     }
+
+    @Override
+    public Integer getMaxID() {
+        List<Order> allOrders = getAll();
+
+        // Use a stream to find the maximum ID among all cakes
+        return allOrders.stream()
+                .mapToInt(HasID::getID) // Extract the ID of each cake
+                .max() // Get the maximum value
+                .orElse(0); // Return -1 if the file is empty
+    }
 }

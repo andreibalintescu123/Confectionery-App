@@ -32,4 +32,7 @@ public class CakeService {
         cakeRepository.delete(id);
     }
 
+    public Integer getMaxCakeId(){
+        return cakeRepository.getMaxID();
+    }
 }

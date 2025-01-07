@@ -1,12 +1,11 @@
 package org.confectionery.Service;
 
 import org.confectionery.Domain.*;
+import org.confectionery.Domain.Date;
 import org.confectionery.Exception.EntityNotFoundException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfectioneryService {
@@ -61,13 +60,12 @@ public class ConfectioneryService {
 
         // Combine drinks and cakes into a single list of products
         List<Product> products = new ArrayList<>();
-        products.addAll(drinks);
         products.addAll(cakes);
+        products.addAll(drinks);
+
 
         // Sort the combined list by the ID of each product
-        return products.stream()
-                .sorted(Comparator.comparing(Product::getID))
-                .collect(Collectors.toList());
+        return products;
     }
 
     public void deleteProduct(Integer id) {
@@ -92,6 +90,7 @@ public class ConfectioneryService {
     }
 
     public Drink createDrink(String name, double price, double weight, Date expirationDate, int points, double alcoholPercentage) {
+        IDGenerator.getInstance().setCurrentId(drinkService.getMaxDrinkId());
         Drink drink = new Drink(name, price, weight, expirationDate, points, alcoholPercentage);
         if (drinkService.getAllDrinks().stream().anyMatch(d -> d.getName().equals(name)))
             return null;
@@ -103,6 +102,7 @@ public class ConfectioneryService {
     }
 
     public Cake createCake(String name, double price, double weight, Date expirationDate, int points, int calories) {
+        IDGenerator.getInstance().setCurrentId(cakeService.getMaxCakeId());
         Cake cake = new Cake(name, price, weight, expirationDate, points, calories); // AICI ISI IA ID-UL
         if (cakeService.getAllCakes().stream().anyMatch(c -> c.getName().equals(name))) // INAINTE SA FIE INCREMENTAT DE TOT NR DE CAKE-URI DIN BAZA DE DATE
             return null;
@@ -221,13 +221,20 @@ public class ConfectioneryService {
                 .collect(Collectors.toList());
     }
 
-    public Order placeOrder(List<Integer> productIds, Integer clientId) {
+    public Order placeOrder(List<Integer> cakeIds, List<Integer> drinkIds, Integer clientId) {
         List<Product> products = new ArrayList<>();
-        for (Integer productId : productIds) {
-            if(getProduct(productId) != null) {
-                products.add(getProduct(productId));
+        for (Integer cakeId : cakeIds) {
+            if(cakeService.findCakeById(cakeId) != null) {
+                products.add(cakeService.findCakeById(cakeId));
             }
         }
+        for (Integer drinkId : drinkIds) {
+            if(drinkService.findDrinkById(drinkId) != null) {
+                products.add(drinkService.findDrinkById(drinkId));
+            }
+        }
+
+        IDGenerator.getInstance().setCurrentId(orderService.getMaxOrderId());
         Date date = Date.convertLocalDateToDate(LocalDate.now());
         Order order = new Order(products, date);
         order.setClientID(clientId);
@@ -358,6 +365,117 @@ public class ConfectioneryService {
         } else {
             System.out.println("No points available for any client.");
         }
+    }
+
+    public void getYearlyBalance(Integer year) {
+        // Fetch all orders
+        List<Order> orders = orderService.getAllOrders();
+
+        // Variables to store results
+        float yearlyTotalValue = 0;
+        int yearlyTotalProductsSold = 0;
+        Map<Month, Float> monthlyValues = new HashMap<>();
+        Map<Month, Integer> monthlyProductsSold = new HashMap<>();
+        Map<Month, Map<String, Integer>> monthlyProductQuantities = new HashMap<>();
+
+        // Initialize data for each month
+        for (Month month : Month.values()) {
+            monthlyValues.put(month, 0f);
+            monthlyProductsSold.put(month, 0);
+            monthlyProductQuantities.put(month, new HashMap<>());
+        }
+
+        // Process orders
+        for (Order order : orders) {
+            if (order.getDate().getYear() == year) { // Check if the order's year matches
+                Month orderMonth = order.getDate().getMonth();
+
+                // Update monthly totals
+                float orderTotal = order.getTotal();
+                monthlyValues.put(orderMonth, monthlyValues.get(orderMonth) + orderTotal);
+                for (Product product : order.getProducts()) {
+                    monthlyProductsSold.put(orderMonth, monthlyProductsSold.get(orderMonth) + 1);
+                    monthlyProductQuantities.get(orderMonth).merge(product.getName(), 1, Integer::sum);
+                }
+
+                // Update yearly totals
+                yearlyTotalValue += orderTotal;
+                yearlyTotalProductsSold += order.getProducts().size();
+            }
+        }
+
+        // Print yearly summary
+        System.out.println("\n===== Yearly Balance: " + year + " =====");
+        System.out.println("Total Value of Products Sold: $" + yearlyTotalValue);
+        System.out.println("Total Products Sold: " + yearlyTotalProductsSold);
+
+        // Print monthly breakdown
+        for (Month month : Month.values()) {
+            if (monthlyValues.get(month) > 0) { // Print only months with orders
+                System.out.println("\n--- " + month.name() + " ---");
+                System.out.println("Total Value: $" + monthlyValues.get(month));
+                System.out.println("Total Products Sold: " + monthlyProductsSold.get(month));
+                System.out.println("Products Sold with Quantities:");
+                for (Map.Entry<String, Integer> entry : monthlyProductQuantities.get(month).entrySet()) {
+                    System.out.printf("  %s: %d%n", entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        System.out.println("=========================================\n");
+    }
+
+
+    public void getMonthlyBalance(Month month) {
+        // Fetch all orders
+        List<Order> orders = orderService.getAllOrders();
+
+        // Variables to store results
+        float totalValue = 0;
+        int totalProductsSold = 0;
+        Map<String, Integer> productQuantities = new HashMap<>();
+
+        // Process orders
+        for (Order order : orders) {
+            if (order.getDate().getMonth() == month) { // Check if the order's month matches
+                totalValue += order.getTotal(); // Accumulate the total value
+                for (Product product : order.getProducts()) {
+                    totalProductsSold++; // Increment total product count
+                    productQuantities.merge(product.getName(), 1, Integer::sum); // Count products
+                }
+            }
+        }
+
+        // Print results
+        System.out.println("\n===== Monthly Balance: " + month.name() + " =====");
+        System.out.println("Total Value of Products Sold: $" + totalValue);
+        System.out.println("Total Products Sold: " + totalProductsSold);
+        System.out.println("\nProducts Sold with Quantities:");
+        for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
+            System.out.printf("  %s: %d%n", entry.getKey(), entry.getValue());
+        }
+        System.out.println("=========================================\n");
+    }
+
+
+    public void getTotalBalance() {
+        // Fetch all orders
+        List<Order> orders = orderService.getAllOrders();
+
+        // Variables to store total values
+        float totalValue = 0;
+        int totalProductsSold = 0;
+
+        // Iterate over all orders
+        for (Order order : orders) {
+            totalValue += order.getTotal(); // Sum up order totals
+            totalProductsSold += order.getProducts().size(); // Count the products in each order
+        }
+
+        // Print the results
+        System.out.println("\n===== Total Balance =====");
+        System.out.println("Total Value of Products Sold: $" + totalValue);
+        System.out.println("Total Number of Products Sold: " + totalProductsSold);
+        System.out.println("==========================\n");
     }
 
 }

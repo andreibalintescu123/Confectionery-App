@@ -61,5 +61,8 @@ public class DrinkService {
         drinkRepository.delete(id);
     }
 
+    public Integer getMaxDrinkId() {
+        return drinkRepository.getMaxID();
+    }
 }
 

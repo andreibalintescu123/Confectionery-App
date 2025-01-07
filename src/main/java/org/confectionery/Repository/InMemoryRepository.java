@@ -54,5 +54,10 @@ public class InMemoryRepository<T extends HasID> implements Repository<T> {
         return data.values().stream().toList();
     }
 
+    @Override
+    public Integer getMaxID() {
+        return data.keySet().stream().max(Integer::compareTo).orElse(0);
+    }
+
 
 }

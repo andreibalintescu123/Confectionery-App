@@ -107,6 +107,7 @@ public class CakeDBRepository extends DBRepository<Cake> {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public Cake get(Integer id) {
         String sql = "SELECT * FROM Cakes WHERE cakeID = ?";
@@ -126,6 +127,26 @@ public class CakeDBRepository extends DBRepository<Cake> {
         }
     }
 
+    @Override
+    public Integer getMaxID() {
+        String sql = """
+        SELECT MAX(Cakes.cakeID) AS max_id FROM Cakes
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            // Log the exception and handle it gracefully
+            System.err.println("Error executing getMaxID query: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Return 0 if an error occurs or no rows are found
+        return 0;
+    }
 
 }
 

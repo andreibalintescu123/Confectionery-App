@@ -2,6 +2,7 @@ package org.confectionery.Service;
 
 import org.confectionery.Domain.Admin;
 import org.confectionery.Domain.Client;
+import org.confectionery.Domain.IDGenerator;
 import org.confectionery.Domain.User;
 import org.confectionery.Exception.EntityNotFoundException;
 import org.confectionery.Exception.InvalidCredentialsException;
@@ -18,6 +19,7 @@ public class UserService {
     }
 
     public Client registerClient(String name, String email, String password, String address) {
+        IDGenerator.getInstance().setCurrentId(getMaxUserId());
         try {
             if (isEmailRegistered(email)) {
                 throw new IllegalArgumentException("A user with this email already exists.");
@@ -33,6 +35,7 @@ public class UserService {
     }
 
     public Admin registerAdmin(String name, String email, String password) {
+        IDGenerator.getInstance().setCurrentId(getMaxUserId());
         try {
             if (isEmailRegistered(email)) {
                 throw new IllegalArgumentException("A user with this email already exists.");
@@ -130,5 +133,8 @@ public class UserService {
         }catch (EntityNotFoundException e){
             System.out.println(e.getMessage());
         }
+    }
+    public Integer getMaxUserId(){
+        return userRepository.getMaxID();
     }
 }

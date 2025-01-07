@@ -92,8 +92,8 @@ public class ConfectioneryController {
         return confectioneryService.productsBeforeDate(expirationDate);
     }
 
-    public Order placeOrder(List<Integer> productIds, Integer clientId) {
-       return confectioneryService.placeOrder(productIds, clientId);
+    public Order placeOrder(List<Integer> cakeIds, List<Integer> drinkIds, Integer clientId) {
+       return confectioneryService.placeOrder(cakeIds, drinkIds,  clientId);
 
     }
 
@@ -107,5 +107,17 @@ public class ConfectioneryController {
 
     public void getWinner() {
         confectioneryService.viewClientWithMostPoints();
+    }
+
+    public void getYearlyBalance(Integer year) {
+        confectioneryService.getYearlyBalance(year);
+    }
+
+    public void getMonthlyBalance(Month month) {
+        confectioneryService.getMonthlyBalance(month);
+    }
+
+    public void getTotalBalance() {
+        confectioneryService.getTotalBalance();
     }
 }
