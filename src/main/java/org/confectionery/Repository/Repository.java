@@ -46,5 +46,6 @@ public interface Repository<T extends HasID> {
      */
     List<T> getAll();
 
+    Integer getMaxID();
 
 }

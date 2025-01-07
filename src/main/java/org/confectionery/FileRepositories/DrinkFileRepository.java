@@ -2,7 +2,10 @@ package org.confectionery.FileRepositories;
 
 import org.confectionery.Domain.Date;
 import org.confectionery.Domain.Drink;
+import org.confectionery.Domain.HasID;
 import org.confectionery.Repository.FileRepository;
+
+import java.util.List;
 
 public class DrinkFileRepository extends FileRepository<Drink> {
     /**
@@ -40,5 +43,16 @@ public class DrinkFileRepository extends FileRepository<Drink> {
         } catch (Exception e) {
             throw new IllegalArgumentException("Error deserializing Drink: " + data, e);
         }
+    }
+
+    @Override
+    public Integer getMaxID() {
+        List<Drink> allDrinks = getAll();
+
+        // Use a stream to find the maximum ID among all cakes
+        return allDrinks.stream()
+                .mapToInt(HasID::getID) // Extract the ID of each cake
+                .max() // Get the maximum value
+                .orElse(0); // Return -1 if the file is empty
     }
 }

@@ -222,4 +222,36 @@ public class UserDBRepository extends DBRepository<User> {
         return users;
     }
 
+    /**
+     * Retrieves the maximum ID from the union of the Admins and Clients tables.
+     *
+     * @return the maximum ID, or -1 if no IDs are found.
+     */
+    @Override
+    public Integer getMaxID() {
+        String sql = """
+        SELECT MAX(ID) AS max_id
+        FROM (
+            SELECT ID FROM Admins
+            UNION ALL
+            SELECT ID FROM Clients
+        ) combined_ids;
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            // Log the exception and handle it gracefully
+            System.err.println("Error executing getMaxID query: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Return -1 if an error occurs or no rows are found
+        return 0;
+    }
+
+
 }

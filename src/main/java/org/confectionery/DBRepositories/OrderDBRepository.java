@@ -175,7 +175,7 @@ public class OrderDBRepository extends DBRepository<Order> {
         }
     }
 
-    private List<Product> getProductsForOrder(int orderID) {
+     private List<Product> getProductsForOrder(int orderID) {
         List<Product> products = new ArrayList<>();
 
         // Query OrderedCakes
@@ -228,5 +228,25 @@ public class OrderDBRepository extends DBRepository<Order> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public Integer getMaxID() {
+        String sql = """
+        SELECT MAX(Orders.orderID) AS max_id FROM Orders
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            // Log the exception and handle it gracefully
+            System.err.println("Error executing getMaxID query: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Return 0 if an error occurs or no rows are found
+        return 0;
     }
 }

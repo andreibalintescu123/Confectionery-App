@@ -1,8 +1,11 @@
 package org.confectionery.FileRepositories;
 
+import org.confectionery.Domain.HasID;
 import org.confectionery.Domain.Cake;
 import org.confectionery.Domain.Date;
 import org.confectionery.Repository.FileRepository;
+
+import java.util.List;
 
 public class CakeFileRepository extends FileRepository<Cake> {
     /**
@@ -43,5 +46,15 @@ public class CakeFileRepository extends FileRepository<Cake> {
     }
 
 
+    @Override
+    public Integer getMaxID() {
+        List<Cake> allCakes = getAll();
+
+        // Use a stream to find the maximum ID among all cakes
+        return allCakes.stream()
+                .mapToInt(HasID::getID) // Extract the ID of each cake
+                .max() // Get the maximum value
+                .orElse(0); // Return -1 if the file is empty
+    }
 
 }

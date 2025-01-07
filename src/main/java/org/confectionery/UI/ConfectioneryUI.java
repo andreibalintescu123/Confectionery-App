@@ -146,26 +146,61 @@ public class ConfectioneryUI {
         Integer clientId = loggedUser.getID();
         controller.generateInvoice(clientId);
     }
-// Consider adding a quantity, especially if you want to order 2 of the same product, because the constraints in the DB will
-    // Not let you add more products
     private void placeOrder() {
+        System.out.println("==== Place Order ====");
+        System.out.println("You will first select cakes, followed by drinks.");
         System.out.println("Enter the IDs of the products you would like to order, one at a time.");
-        System.out.println("Type 'done' when you have finished or 'cancel' to abort the order.");
-        List<Integer> productIds = new ArrayList<>();
+        System.out.println("Type 'done' when you have finished with a category or 'cancel' to abort the order.");
 
+        // Separate lists for cakes and drinks
+        List<Integer> cakeIds = new ArrayList<>();
+        List<Integer> drinkIds = new ArrayList<>();
+
+        // Input cakes
+        System.out.println("\n--- Select Cakes ---");
+        collectProductIDs(cakeIds);
+
+        // Input drinks
+        System.out.println("\n--- Select Drinks ---");
+        collectProductIDs(drinkIds);
+
+        // If both lists are empty, abort the order
+        if (cakeIds.isEmpty() && drinkIds.isEmpty()) {
+            System.out.println("No products selected. Aborting order.");
+            return;
+        }
+
+        Integer clientId = loggedUser.getID(); // Get logged user ID
+
+        try {
+            // Call the controller to place the order
+            Order order = controller.placeOrder(cakeIds, drinkIds, clientId);
+            if (order != null) {
+                System.out.println("Order with id " + order.getID() + " has been placed successfully!");
+            } else {
+                throw new ValidationException("Order could not be placed.");
+            }
+        } catch (ValidationException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Helper method to collect product IDs for a category.
+     *
+     * @param productIds List to store the product IDs.
+     */
+    private void collectProductIDs(List<Integer> productIds) {
         while (true) {
             System.out.print("Enter product ID: ");
             String input = scanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("done")) {
-                if (productIds.isEmpty()) {
-                    System.out.println("No products selected. Aborting order.");
-                    return;
-                }
-                break;
+                break; // Move to the next category
             } else if (input.equalsIgnoreCase("cancel")) {
                 System.out.println("Order cancelled.");
-                return;
+                productIds.clear(); // Clear the current category list
+                return; // Exit the method
             } else {
                 try {
                     int productId = Integer.parseInt(input);
@@ -175,17 +210,8 @@ public class ConfectioneryUI {
                 }
             }
         }
-        Integer clientId = loggedUser.getID();
-        try {
-            Order order = controller.placeOrder(productIds, clientId);
-            if (order != null) {
-                System.out.println("Order with id " + order.getID() + " has been placed successfully!");
-            } else throw new ValidationException("Order could not be placed.");
-
-        } catch (ValidationException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
     }
+
 
 
     private void viewAvailableProducts() {
@@ -622,12 +648,23 @@ public class ConfectioneryUI {
     }
 
     private void yearlyBalance() {
+        System.out.println("Enter the year that you would like to check:");
+        Integer year = Integer.parseInt(scanner.nextLine());
+        System.out.println("Yearly balance details:");
+        controller.getYearlyBalance(year);
     }
 
     private void monthlyBalance() {
+        System.out.println("Enter the month that you would like to check:");
+        String month = scanner.nextLine();
+        Month actualMonth = Month.valueOf(month);
+        System.out.println("Monthly balance details:");
+        controller.getMonthlyBalance(actualMonth);
     }
 
     private void totalBalance() {
+        System.out.println("Total Balance:");
+        controller.getTotalBalance();
     }
 
     public void createAccount() {

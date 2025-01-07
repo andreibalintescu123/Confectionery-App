@@ -124,6 +124,7 @@ public class App {
         Date expirationDate9 = new Date(2023, Month.March, Day.Thirteenth);
         Date expirationDate10 = new Date(2027, Month.January, Day.First);
 
+        IDGenerator.getInstance().reset();
         drinkRepository.create(new Drink("Water", 10, 50, expirationDate6, 30, 0));
         drinkRepository.create(new Drink("Cappuccino", 15, 200, expirationDate7, 45, 0));
         drinkRepository.create(new Drink("Latte", 14, 250, expirationDate8, 68, 0));
@@ -135,6 +136,7 @@ public class App {
         drinkRepository.create(new Drink( "Lemonade", 25, 350, expirationDate9, 17, 0));
         drinkRepository.create(new Drink( "Hot Chocolate", 20, 200, expirationDate10, 22, 0));
 
+        IDGenerator.getInstance().reset();
         cakeRepository.create(new Cake("Tiramisu", 100, 50, expirationDate3, 140, 1000));
         cakeRepository.create(new Cake("Eclair", 130, 50, expirationDate4, 120, 1000));
         cakeRepository.create(new Cake( "Dubai Chocolate", 200, 100, expirationDate2, 99, 1200));
@@ -146,6 +148,7 @@ public class App {
         cakeRepository.create(new Cake("Pineapple Upside Down Cake", 140, 70, expirationDate5, 95, 650));
         cakeRepository.create(new Cake("Strawberry Shortcake", 160, 80, expirationDate4, 90, 750));
 
+        IDGenerator.getInstance().reset();
         userRepository.create(new Client("Andrei", "andrei@gmail.com", "andrei", "Bujoreni"));
         userRepository.create(new Client("Ioana", "ioana@gmail.com", "ioana", "Bujoreni"));
         userRepository.create(new Client("Maria", "maria@gmail.com", "maria", "Bujoreni"));

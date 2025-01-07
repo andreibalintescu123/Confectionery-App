@@ -39,9 +39,7 @@ public class OrderService {
                 .toList();
     }
 
-    public List<Order> findOrdersByDate(LocalDate date) {
-        return getAllOrders().stream()
-                .filter(order -> order.getDate().equals(date))
-                .toList();
+    public Integer getMaxOrderId() {
+        return orderRepository.getMaxID();
     }
 }

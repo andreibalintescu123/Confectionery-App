@@ -109,7 +109,6 @@ public class DrinkDBRepository extends DBRepository<Drink> {
         }
     }
 
-
     @Override
     public Drink get(Integer id) {
         String sql = "SELECT * FROM Drinks WHERE drinkID = ?";
@@ -129,5 +128,24 @@ public class DrinkDBRepository extends DBRepository<Drink> {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public Integer getMaxID() {
+        String sql = """
+        SELECT MAX(Drinks.drinkID) AS max_id FROM Drinks
+    """;
 
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+        } catch (SQLException e) {
+            // Log the exception and handle it gracefully
+            System.err.println("Error executing getMaxID query: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Return 0 if an error occurs or no rows are found
+        return 0;
+    }
 }

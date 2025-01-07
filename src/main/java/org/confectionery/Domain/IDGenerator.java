@@ -31,4 +31,7 @@ public class IDGenerator {
         this.currentId = 1;
     }
 
+    public void setCurrentId(int currentId) {
+        this.currentId = currentId + 1;
+    }
 }
