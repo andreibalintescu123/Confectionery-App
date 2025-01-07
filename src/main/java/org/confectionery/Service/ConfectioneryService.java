@@ -14,6 +14,7 @@ public class ConfectioneryService {
     private final CakeService cakeService;
     private final OrderService orderService;
 
+
     public ConfectioneryService(UserService userService, DrinkService drinkService, CakeService cakeService, OrderService orderService) {
         this.userService = userService;
         this.drinkService = drinkService;
@@ -478,4 +479,26 @@ public class ConfectioneryService {
         System.out.println("==========================\n");
     }
 
+    public Order getOrder(Integer id) {
+        try {
+            if(orderService.findOrderById(id) != null) {
+                return orderService.findOrderById(id);
+            }
+            else throw new EntityNotFoundException("Entity Not Found");
+        }catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void deleteOrder(Integer id) {
+        try {
+            if(orderService.findOrderById(id) != null) {
+                orderService.deleteOrder(id);
+            }
+            else throw new EntityNotFoundException("Entity Not Found");
+        }catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
