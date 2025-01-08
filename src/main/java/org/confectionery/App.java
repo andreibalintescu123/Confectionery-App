@@ -53,7 +53,12 @@ public class App {
                 throw new ValidationException("Invalid option. Please choose one of the provided options.");
         }
         IDGenerator.getInstance().reset();
-        populateRepositories();
+        System.out.println("Would you like to populate the repositories?");
+        System.out.println("Yes or No?");
+        String option = scanner.nextLine();
+        if(option.equals("Yes") || option.equals("yes")) {
+            populateRepositories();
+        }
         initializeService();
         initializeController();
         initializeUI();

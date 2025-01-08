@@ -91,7 +91,7 @@ public class ApplicationTest {
             assertNull(userRepository.get(3), "User was not deleted!") ;
         }
 
-        @Test void updateCake(){
+        @Test void testUpdateCake(){
             Cake cake = cakeRepository.get(3);
             cake.setName("Lava Cake");
             cakeRepository.update(cake);
@@ -99,7 +99,7 @@ public class ApplicationTest {
             assert updatedCake.getName().equals("Lava Cake");
         }
 
-        @Test void updateDrink(){
+        @Test void testUpdateDrink(){
             Drink drink = drinkRepository.get(3);
             drink.setName("Citronella");
             drink.setAlcoholPercentage(4.5);
@@ -110,7 +110,7 @@ public class ApplicationTest {
 
         }
 
-        @Test void updateUser(){
+        @Test void testUpdateUser(){
             User user = userRepository.get(3);
             user.setName("Bob");
             user.setEmail("bob@gmail.com");
@@ -135,12 +135,12 @@ public class ApplicationTest {
             service.generateInvoice(3);
         }
 
-        @Test void emptyOrderRepo(){
+        @Test void testEmptyOrderRepo(){
             Integer id = orderRepository.getMaxID();
             assert id == 0;
         }
 
-        @Test void createOrder(){
+        @Test void testCreateOrder(){
             List<Integer> cakeIds = new ArrayList<>();
             List<Integer> drinkIds = new ArrayList<>();
             cakeIds.add(3);
@@ -149,7 +149,7 @@ public class ApplicationTest {
             assertNotNull(orderRepository.get(1), "Failed to create order.");
         }
 
-        @Test void deleteOrder(){
+        @Test void testDeleteOrder(){
             List<Integer> cakeIds = new ArrayList<>();
             List<Integer> drinkIds = new ArrayList<>();
             cakeIds.add(3);
@@ -157,6 +157,65 @@ public class ApplicationTest {
             service.placeOrder(cakeIds,drinkIds,3);
             service.deleteOrder(1);
             assertNull(orderRepository.get(1), "Failed to delete order.");
+        }
+
+        @Test void testGetAllCakes(){
+            List<Cake> cakes = cakeRepository.getAll();
+            assert cakes.size() == 3;
+        }
+        @Test void testGetAllDrinks(){
+            List<Drink> drinks = drinkRepository.getAll();
+            assert drinks.size() == 3;
+        }
+        @Test void testGetAllOrders(){
+            List<Integer> cakeIds = new ArrayList<>();
+            List<Integer> drinkIds = new ArrayList<>();
+            cakeIds.add(3);
+            drinkIds.add(3);
+            service.placeOrder(cakeIds,drinkIds,1);
+            service.placeOrder(cakeIds,drinkIds,3);
+            service.placeOrder(cakeIds,drinkIds,2);
+            List<Order> orders = orderRepository.getAll();
+            assert orders.size() == 3;
+        }
+        @Test void testGetAllUsers(){
+            List<User> users = userRepository.getAll();
+            assert users.size() == 4;
+        }
+
+        @Test void testGetNoAlcoholicDrinks(){
+            List<Drink> drinks = service.getAlcoholicDrinks();
+            assert drinks.isEmpty();
+
+        }
+
+        @Test void testGetAlcoholicDrinks(){
+            Date expirationDate10 = new Date(2027, Month.January, Day.First);
+            drinkRepository.create(new Drink( "Tequila", 18, 300, expirationDate10, 15, 6));
+            List<Drink> drinks = service.getAlcoholicDrinks();
+            assert drinks.size() == 1;
+        }
+
+        @Test void testClientWithMostPoints(){
+            List<Integer> cakeIds = new ArrayList<>();
+            List<Integer> drinkIds = new ArrayList<>();
+            cakeIds.add(3);
+            drinkIds.add(3);
+            service.placeOrder(cakeIds,drinkIds,3);
+            service.placeOrder(cakeIds,drinkIds,3);
+            System.out.println("Client with most points should be the one with id 3.");
+            service.viewClientWithMostPoints();
+        }
+
+        @Test void testMonthlyBalance(){
+            List<Integer> cakeIds = new ArrayList<>();
+            List<Integer> drinkIds = new ArrayList<>();
+            cakeIds.add(3);
+            drinkIds.add(3);
+            service.placeOrder(cakeIds,drinkIds,3);
+            service.placeOrder(cakeIds,drinkIds,3);
+            System.out.println("Monthly balance for January should be 220 lei.");
+            service.getMonthlyBalance(Month.January);
         }
 }
 

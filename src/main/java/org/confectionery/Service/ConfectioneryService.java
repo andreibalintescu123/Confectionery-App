@@ -407,14 +407,14 @@ public class ConfectioneryService {
 
         // Print yearly summary
         System.out.println("\n===== Yearly Balance: " + year + " =====");
-        System.out.println("Total Value of Products Sold: $" + yearlyTotalValue);
+        System.out.println("Total Value of Products Sold: " + yearlyTotalValue + " lei");
         System.out.println("Total Products Sold: " + yearlyTotalProductsSold);
 
         // Print monthly breakdown
         for (Month month : Month.values()) {
             if (monthlyValues.get(month) > 0) { // Print only months with orders
                 System.out.println("\n--- " + month.name() + " ---");
-                System.out.println("Total Value: $" + monthlyValues.get(month));
+                System.out.println("Total Value: " + monthlyValues.get(month) + " lei");
                 System.out.println("Total Products Sold: " + monthlyProductsSold.get(month));
                 System.out.println("Products Sold with Quantities:");
                 for (Map.Entry<String, Integer> entry : monthlyProductQuantities.get(month).entrySet()) {
@@ -448,7 +448,7 @@ public class ConfectioneryService {
 
         // Print results
         System.out.println("\n===== Monthly Balance: " + month.name() + " =====");
-        System.out.println("Total Value of Products Sold: $" + totalValue);
+        System.out.println("Total Value of Products Sold: " + totalValue + " lei");
         System.out.println("Total Products Sold: " + totalProductsSold);
         System.out.println("\nProducts Sold with Quantities:");
         for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
@@ -474,7 +474,7 @@ public class ConfectioneryService {
 
         // Print the results
         System.out.println("\n===== Total Balance =====");
-        System.out.println("Total Value of Products Sold: $" + totalValue);
+        System.out.println("Total Value of Products Sold: " + totalValue + " lei");
         System.out.println("Total Number of Products Sold: " + totalProductsSold);
         System.out.println("==========================\n");
     }
