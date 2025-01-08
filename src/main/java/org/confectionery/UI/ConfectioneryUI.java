@@ -94,7 +94,7 @@ public class ConfectioneryUI {
                         5. Generate Invoice
                         6. View Profile
                         7. View Drinks With Alcohol
-                        8. View Products available until a given date
+                        8. View Products available at given date
                         0. Logout
                         Please select an option:
                         """);
@@ -235,8 +235,12 @@ public class ConfectioneryUI {
         String expirationDate = scanner.nextLine();
         Date date = Date.parse(expirationDate);
         List<Product> products = controller.getAvailableProducts(date);
+        if(!products.isEmpty())
         for (Product product : products) {
             System.out.println(product);
+        }
+        else{
+            System.out.println("No products available for the specified date.");
         }
     }
 

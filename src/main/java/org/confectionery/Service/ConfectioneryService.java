@@ -206,7 +206,7 @@ public class ConfectioneryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Product> productsBeforeDate(Date date) {
+    public List<Product> productsAfterDate(Date date) {
         // Retrieve all drinks and cakes
         List<Drink> drinks = drinkService.getAllDrinks();
         List<Cake> cakes = cakeService.getAllCakes();

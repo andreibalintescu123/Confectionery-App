@@ -118,16 +118,16 @@ public class App {
     private void populateRepositories() {
         System.out.println("Populating repositories with sample data...");
 
-        Date expirationDate1 = new Date(2026, Month.February, Day.Eleventh);
-        Date expirationDate3 = new Date(2024, Month.December, Day.Eighteenth);
-        Date expirationDate4 = new Date(2024, Month.December, Day.First);
-        Date expirationDate2 = new Date(2024, Month.November, Day.Thirteenth);
-        Date expirationDate5 = new Date(2024, Month.December, Day.Fourteenth);
-        Date expirationDate6 = new Date(2025, Month.April, Day.Fifteenth);
-        Date expirationDate7 = new Date(2024, Month.May, Day.TwentyFourth);
-        Date expirationDate8 = new Date(2026, Month.July, Day.TwentyFirst);
-        Date expirationDate9 = new Date(2023, Month.March, Day.Thirteenth);
-        Date expirationDate10 = new Date(2027, Month.January, Day.First);
+        Date expirationDate1 = new Date(2025, Month.January, Day.Eleventh);
+        Date expirationDate3 = new Date(2025, Month.January, Day.Eighteenth);
+        Date expirationDate4 = new Date(2025, Month.January, Day.First);
+        Date expirationDate2 = new Date(2025, Month.January, Day.Thirteenth);
+        Date expirationDate5 = new Date(2025, Month.January, Day.Fourteenth);
+        Date expirationDate6 = new Date(2025, Month.January, Day.Fourth);
+        Date expirationDate7 = new Date(2025, Month.January, Day.TwentyFourth);
+        Date expirationDate8 = new Date(2025, Month.January, Day.Second);
+        Date expirationDate9 = new Date(2025, Month.January, Day.Thirteenth);
+        Date expirationDate10 = new Date(2025, Month.January, Day.First);
 
         IDGenerator.getInstance().reset();
         drinkRepository.create(new Drink("Water", 10, 50, expirationDate6, 30, 0));

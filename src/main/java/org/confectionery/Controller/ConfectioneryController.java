@@ -89,7 +89,7 @@ public class ConfectioneryController {
     }
 
     public List<Product> getAvailableProducts(Date expirationDate) {
-        return confectioneryService.productsBeforeDate(expirationDate);
+        return confectioneryService.productsAfterDate(expirationDate);
     }
 
     public Order placeOrder(List<Integer> cakeIds, List<Integer> drinkIds, Integer clientId) {
