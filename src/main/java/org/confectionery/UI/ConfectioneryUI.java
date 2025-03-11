@@ -302,6 +302,7 @@ public class ConfectioneryUI {
                         viewProfile();
                         break;
                     case "5":
+                        changePassword();
                         break;
                     case "0":
                         statusOff(loggedUser.getID());
@@ -315,6 +316,22 @@ public class ConfectioneryUI {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+    private void changePassword() {
+        System.out.println("Type in a new password:");
+        String password = scanner.nextLine().trim();
+        System.out.println("Retype the password:");
+        String retypedPassword = scanner.nextLine().trim();
+        try{
+            if(!password.equals(retypedPassword))
+                throw new InvalidCredentialsException("Passwords do not match.");
+            if(controller.changePassword(loggedUser.getID(),password))
+                System.out.println("Password changed successfully!");
+            else System.out.println("Failed to change password.");
+        }catch (InvalidCredentialsException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private void viewProfile() {
@@ -391,7 +408,6 @@ public class ConfectioneryUI {
         controller.deleteClient(id);
     }
 
-    /// NU UITA CA TREBUIE SA VALIDEZI EMAIL-UL CA SA NU IL INLOCUIESTI CU UNUL DEJA EXISTENT
     private void updateClient() {
         System.out.println("Enter the id of the client you would like to update:");
         Integer id = Integer.parseInt(scanner.nextLine());
