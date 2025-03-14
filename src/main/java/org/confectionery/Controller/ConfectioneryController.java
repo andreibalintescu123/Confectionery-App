@@ -128,4 +128,9 @@ public class ConfectioneryController {
     public void deleteOrder(Integer id) {
         confectioneryService.deleteOrder(id);
     }
+
+    public boolean changePassword(Integer id, String password) {
+        return confectioneryService.changePassword(id, password);
+
+    }
 }

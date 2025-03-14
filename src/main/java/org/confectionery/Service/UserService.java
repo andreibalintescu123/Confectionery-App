@@ -53,7 +53,6 @@ public class UserService {
     public User login(String email, String password) {
         try {
             Optional<User> loggedUser = userRepository.getAll().stream()
-                    .filter(user -> user instanceof Admin || user instanceof Client)
                     .filter(user -> user instanceof Admin admin && admin.getEmail().equals(email) && admin.getPassword().equals(password)
                             || user instanceof Client client && client.getEmail().equals(email) && client.getPassword().equals(password))
                     .findFirst();
@@ -112,7 +111,9 @@ public class UserService {
         try{
             Client client = (Client) userRepository.get(id);
             if (client == null) throw new EntityNotFoundException("Entity not found.");
-            else return client;
+            else{
+                return client;
+            }
         }catch (EntityNotFoundException e){
             System.out.println(e.getMessage());
             return null;
@@ -125,6 +126,13 @@ public class UserService {
             else {
                 Client client = (Client) userRepository.get(id);
                 client.setName(updatedName);
+                try{
+                    if( userRepository.getAll().stream().anyMatch(user -> user.getEmail().equalsIgnoreCase(updatedEmail)))
+                        throw new InvalidCredentialsException("Email already in use.");
+                } catch (InvalidCredentialsException e) {
+                    System.out.println(e.getMessage());
+                }
+
                 client.setEmail(updatedEmail);
                 client.setPassword(updatedPassword);
                 client.setAddress(updatedAddress);
@@ -136,5 +144,17 @@ public class UserService {
     }
     public Integer getMaxUserId(){
         return userRepository.getMaxID();
+    }
+
+
+    public boolean changeAdminPassword(Integer id, String password) {
+        Admin admin = (Admin) userRepository.get(id);
+        String oldPassword = admin.getPassword();
+        if(oldPassword.equals(password)) return false;
+        else{
+            admin.setPassword(password);
+            userRepository.update(admin);
+            return true;
+        }
     }
 }

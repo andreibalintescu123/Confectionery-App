@@ -501,4 +501,15 @@ public class ConfectioneryService {
             System.out.println(e.getMessage());
         }
     }
+    public boolean changePassword(Integer id, String password) {
+        try{
+            if(userService.getAllUsers().stream().anyMatch(user -> user.getID().equals(id))) {
+                return userService.changeAdminPassword(id, password);
+            }
+            else throw new EntityNotFoundException("Entity Not Found");
+        }catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
 }
